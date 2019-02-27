@@ -51,8 +51,9 @@ public class ApiService {
         call.enqueue(new Callback<TopHeadlinesResponse>() {
             @Override
             public void onResponse(Call<TopHeadlinesResponse> call, Response<TopHeadlinesResponse> response){
-
-                Log.v("response",response.body().getTotalResults()+"");
+                if(response.isSuccessful()) {
+                    callback.success(response.body());
+                }
 
             }
 

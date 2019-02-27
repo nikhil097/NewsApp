@@ -17,11 +17,15 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.nikhil.newsapp.Adapter.TrendingNewsAdapter;
 import com.app.nikhil.newsapp.NewsResponseBody.TopHeadlinesResponse;
 import com.app.nikhil.newsapp.Pojo.Article;
 import com.app.nikhil.newsapp.Rest.ApiCredentals;
@@ -45,6 +49,9 @@ public class TrendingNewsFragment extends Fragment implements LocationListener {
     LocationManager locationManager;
 
     boolean checkForLocation=true;
+    TrendingNewsAdapter trendingNewsAdapter;
+
+    RecyclerView trendingNewsRv;
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private String provider;
@@ -59,13 +66,13 @@ public class TrendingNewsFragment extends Fragment implements LocationListener {
                              Bundle savedInstanceState) {
 
         apiService=new ApiService();
-
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
         checkLocationPermission();
 
-        // Inflate the layout for getActivity() fragment
-        return inflater.inflate(R.layout.fragment_trending_news, container, false);
+        View view= inflater.inflate(R.layout.fragment_trending_news, container, false);
+
+        trendingNewsRv=view.findViewById(R.id.trendingNewsRv);
+        return view;
     }
 
 
@@ -80,7 +87,7 @@ public class TrendingNewsFragment extends Fragment implements LocationListener {
 
                 ArrayList<Article> trendingArticlesList=new ArrayList<>();
 
-                for(int i=0;i<totalResults;i++)
+                for(int i=0;i<20;i++)
                 {
                     trendingArticlesList.add(articles.get(i));
                 }
@@ -99,8 +106,11 @@ public class TrendingNewsFragment extends Fragment implements LocationListener {
 
     public void populateTrendingNewsView(ArrayList<Article> trendingArticlesList)
     {
-
-
+        trendingNewsAdapter=new TrendingNewsAdapter(trendingArticlesList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        trendingNewsRv.setLayoutManager(mLayoutManager);
+        trendingNewsRv.setItemAnimator(new DefaultItemAnimator());
+        trendingNewsRv.setAdapter(trendingNewsAdapter);
 
     }
 
