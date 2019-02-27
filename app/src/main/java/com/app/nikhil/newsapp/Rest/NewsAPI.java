@@ -6,11 +6,12 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public interface News {
+public interface NewsAPI {
 
 
     @GET("/v2/top-headlines")
-    Call<TopHeadlinesResponse> getTopHeadLines(@Query("") String apiKey);
+    Call<TopHeadlinesResponse> getTopHeadLines(@Query("apiKey") String apiKey, @Query("country") String country);
+
 
 
 
