@@ -97,21 +97,21 @@ public class TrendingNewsFragment extends Fragment implements LocationListener {
 
     public void fetchTrendingNews(String countryCode)
     {
-        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode, new ResponseCallback<TopHeadlinesResponse>() {
-            @Override
-            public void success(TopHeadlinesResponse topHeadlinesResponse) {
+        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,"",20, new ResponseCallback<TopHeadlinesResponse>() {
+                    @Override
+                    public void success(TopHeadlinesResponse topHeadlinesResponse) {
 
-                List<Article> articles=topHeadlinesResponse.getArticles();
-                int totalResults=topHeadlinesResponse.getTotalResults();
+                        List<Article> articles=topHeadlinesResponse.getArticles();
+                        int totalResults=topHeadlinesResponse.getTotalResults();
 
-                ArrayList<Article> trendingArticlesList=new ArrayList<>();
+                        ArrayList<Article> trendingArticlesList=new ArrayList<>();
 
-                for(int i=0;i<20;i++)
-                {
-                    trendingArticlesList.add(articles.get(i));
-                }
+                        for(int i=0;i<20;i++)
+                        {
+                            trendingArticlesList.add(articles.get(i));
+                        }
 
-                populateTrendingNewsView(trendingArticlesList);
+                        populateTrendingNewsView(trendingArticlesList);
 
 
             }

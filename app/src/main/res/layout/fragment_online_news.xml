@@ -3,11 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".UI.Fragments.OnlineNewsFragment">
+
+    <android.support.design.widget.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:padding="8dp"
+        app:tabMode="scrollable"
+        android:id="@+id/newsCategoryTabs">
+
+    </android.support.design.widget.TabLayout>
 
     <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/newsCategoryTabs"
         android:id="@+id/homeViewPager">
 
     </android.support.v4.view.ViewPager>
