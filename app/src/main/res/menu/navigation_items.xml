@@ -13,10 +13,7 @@
         android:icon="@drawable/icons8_check_file_100"
         android:title="" />
 
-    <item
-        android:id="@+id/profileSection"
-        android:icon="@drawable/icons8_user_100"
-        android:title="" />
+
 
 
 

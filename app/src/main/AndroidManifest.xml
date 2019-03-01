@@ -23,12 +23,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".UI.Activity.ArticleDetailActivity" />
-        <activity android:name=".UI.Fragments.SplashSreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".UI.Fragments.SplashScreen">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
     </application>
 
