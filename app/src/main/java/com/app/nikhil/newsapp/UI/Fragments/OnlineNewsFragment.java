@@ -1,36 +1,45 @@
-package com.app.nikhil.newsapp;
+package com.app.nikhil.newsapp.UI.Fragments;
 
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.app.nikhil.newsapp.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class MainActivity extends AppCompatActivity{
-
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class OnlineNewsFragment extends Fragment {
 
     ViewPager homeViewPager;
 
+    public OnlineNewsFragment() {
+        // Required empty public constructor
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        homeViewPager=findViewById(R.id.homeViewPager);
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view=inflater.inflate(R.layout.fragment_online_news, container, false);
+        homeViewPager=view.findViewById(R.id.homeViewPager);
         setupViewPager(homeViewPager);
-
-
+        return  view;
 
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new TrendingNewsFragment(), "Trending News");
         viewPager.setAdapter(adapter);
     }
@@ -45,7 +54,8 @@ public class MainActivity extends AppCompatActivity{
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(int position)
+        {
             return mFragmentList.get(position);
         }
 
@@ -65,5 +75,8 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
 }

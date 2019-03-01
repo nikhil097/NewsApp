@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/onlineNews"
+        android:icon="@drawable/icons8_user_100"
+        android:title=""/>
+
+    <item
+        android:id="@+id/savedNews"
+        android:icon="@drawable/icons8_check_file_100"
+        android:title="" />
+
+    <item
+        android:id="@+id/profileSection"
+        android:icon="@drawable/icons8_user_100"
+        android:title="" />
+
+
+
+
+</menu>

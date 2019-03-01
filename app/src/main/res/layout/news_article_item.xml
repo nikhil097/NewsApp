@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"
-            android:scaleType="centerCrop"
+            android:scaleType="fitXY"
             android:src="@color/colorPrimaryDark"
             android:id="@+id/newsImage" />
 
@@ -37,8 +37,13 @@
                 android:textStyle="bold"
                 android:id="@+id/articleTitleTv"/>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="5"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:paddingLeft="8dp"
@@ -47,6 +52,16 @@
                 android:maxLines="3"
                 android:id="@+id/articleDescriptionTv"/>
 
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="bottom"
+                    android:layout_height="25dp"
+                    android:id="@+id/saveImageOfflineBtn"
+                    android:paddingBottom="4dp"
+                    android:background="@drawable/ic_offline_pin_black_48dp"/>
+
+            </LinearLayout>
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

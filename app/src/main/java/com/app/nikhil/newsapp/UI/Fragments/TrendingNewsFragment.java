@@ -1,4 +1,4 @@
-package com.app.nikhil.newsapp;
+package com.app.nikhil.newsapp.UI.Fragments;
 
 
 import android.Manifest;
@@ -6,7 +6,9 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -14,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -28,9 +31,13 @@ import android.view.ViewGroup;
 import com.app.nikhil.newsapp.Adapter.TrendingNewsAdapter;
 import com.app.nikhil.newsapp.NewsResponseBody.TopHeadlinesResponse;
 import com.app.nikhil.newsapp.Pojo.Article;
+import com.app.nikhil.newsapp.R;
 import com.app.nikhil.newsapp.Rest.ApiCredentals;
 import com.app.nikhil.newsapp.Rest.ApiService;
 import com.app.nikhil.newsapp.Rest.ResponseCallback;
+import com.app.nikhil.newsapp.Rest.SQLiteDB;
+import com.app.nikhil.newsapp.UI.Activity.ArticleDetailActivity;
+import com.chootdev.recycleclick.RecycleClick;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,6 +54,8 @@ public class TrendingNewsFragment extends Fragment implements LocationListener {
 
     ApiService apiService;
     LocationManager locationManager;
+
+    SQLiteDatabase sqLiteDatabase;
 
     boolean checkForLocation=true;
     TrendingNewsAdapter trendingNewsAdapter;
@@ -66,8 +75,11 @@ public class TrendingNewsFragment extends Fragment implements LocationListener {
                              Bundle savedInstanceState) {
 
         apiService=new ApiService();
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        checkLocationPermission();
+
+        SQLiteDB sqLiteDB=new SQLiteDB(getActivity());
+        sqLiteDatabase=sqLiteDB.getWritableDatabase();
+
+
 
         View view= inflater.inflate(R.layout.fragment_trending_news, container, false);
 
@@ -75,6 +87,13 @@ public class TrendingNewsFragment extends Fragment implements LocationListener {
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        checkLocationPermission();
+
+    }
 
     public void fetchTrendingNews(String countryCode)
     {
@@ -104,13 +123,24 @@ public class TrendingNewsFragment extends Fragment implements LocationListener {
         });
     }
 
-    public void populateTrendingNewsView(ArrayList<Article> trendingArticlesList)
+
+
+    public void populateTrendingNewsView(final ArrayList<Article> trendingArticlesList)
     {
         trendingNewsAdapter=new TrendingNewsAdapter(trendingArticlesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         trendingNewsRv.setLayoutManager(mLayoutManager);
         trendingNewsRv.setItemAnimator(new DefaultItemAnimator());
         trendingNewsRv.setAdapter(trendingNewsAdapter);
+
+        RecycleClick.addTo(trendingNewsRv).setOnItemClickListener(new RecycleClick.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+                startActivity(new Intent(getActivity(),ArticleDetailActivity.class).putExtra("article",trendingArticlesList.get(position)));
+
+            }
+        });
 
     }
 
@@ -156,6 +186,8 @@ public class TrendingNewsFragment extends Fragment implements LocationListener {
             return true;
         }
     }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,

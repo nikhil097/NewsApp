@@ -1,8 +1,9 @@
 package com.app.nikhil.newsapp.Pojo;
 
 
+import java.io.Serializable;
 
-public class Article {
+public class Article implements Serializable {
 
     String  author;
     String title;
@@ -11,6 +12,7 @@ public class Article {
     String urlToImage;
     String publishedAt;
     String content;
+
 
 
     public String getAuthor() {
