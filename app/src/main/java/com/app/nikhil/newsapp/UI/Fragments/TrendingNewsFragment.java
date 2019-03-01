@@ -95,7 +95,7 @@ public class TrendingNewsFragment extends Fragment {
     {
         SharedPreferences mPreferences = getActivity().getSharedPreferences("NewsDB", Context.MODE_PRIVATE);
         String countryCode=mPreferences.getString("userCountry","in");
-        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,"",20, new ResponseCallback<TopHeadlinesResponse>() {
+        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,"","",20, new ResponseCallback<TopHeadlinesResponse>() {
                     @Override
                     public void success(TopHeadlinesResponse topHeadlinesResponse) {
 

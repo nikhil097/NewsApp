@@ -1,15 +1,19 @@
 package com.app.nikhil.newsapp.UI.Fragments;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
@@ -19,6 +23,7 @@ import com.app.nikhil.newsapp.R;
 import com.app.nikhil.newsapp.Rest.ApiCredentals;
 import com.app.nikhil.newsapp.Rest.ApiService;
 import com.app.nikhil.newsapp.Rest.ResponseCallback;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +36,11 @@ public class OnlineNewsFragment extends Fragment {
     ViewPager homeViewPager;
     TabLayout newsCategoryTabs;
     ArrayList<String> tabTitles;
+    ArrayList<String> tabImageUrls;
     ApiService apiService;
+
+    int counter=0;
+    String ImagesUrl=null;
 
     public OnlineNewsFragment() {
         // Required empty public constructor
@@ -46,20 +55,66 @@ public class OnlineNewsFragment extends Fragment {
         homeViewPager=view.findViewById(R.id.homeViewPager);
         newsCategoryTabs=view.findViewById(R.id.newsCategoryTabs);
         tabTitles=new ArrayList<>();
+        tabImageUrls=new ArrayList<>();
         setupViewPager(homeViewPager);
         newsCategoryTabs.setupWithViewPager(homeViewPager);
 
         apiService=new ApiService();
 
-        setUpCustomCategoryTabs();
+        fetchUrlCustomTabBackgroundImage();
 
         return  view;
 
     }
 
 
+    public void fetchUrlCustomTabBackgroundImage() {
 
+     //   tabImageUrls.add("");
 
+        counter=0;
+
+        for (int i = 0; i < tabTitles.size(); i++) {
+            SharedPreferences mPreferences = getActivity().getSharedPreferences("NewsDB", Context.MODE_PRIVATE);
+            String countryCode = mPreferences.getString("userCountry", "in");
+            final int finalI = i;
+            String category="";
+            if(i!=0)
+            {
+                category=tabTitles.get(i);
+            }
+            apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode, category, "", 1, new ResponseCallback<TopHeadlinesResponse>() {
+                @Override
+                public void success(TopHeadlinesResponse topHeadlinesResponse) {
+
+                    counter++;
+
+                    List<Article> articles = topHeadlinesResponse.getArticles();
+                    int totalResults = topHeadlinesResponse.getTotalResults();
+                    if (totalResults != 0) {
+                        tabImageUrls.add(articles.get(0).getUrlToImage());
+                        ImagesUrl+=articles.get(0).getUrlToImage()+"\n";
+                    }
+                    else{
+                        tabImageUrls.add("");
+                    }
+                    if (counter ==tabTitles.size())
+                    {
+                        Log.v("sabkeurl",ImagesUrl);
+                        setUpCustomCategoryTabs();
+                    }
+                }
+
+                @Override
+                public void failure(TopHeadlinesResponse topHeadlinesResponse) {
+
+                }
+            });
+        }
+
+    //    setUpCustomCategoryTabs();
+
+    }
     public void setUpCustomCategoryTabs()
     {
         for(int i=0;i<tabTitles.size();i++) {
@@ -67,27 +122,29 @@ public class OnlineNewsFragment extends Fragment {
         //    customTab.getCustomView().findViewById(R.id.customTabBackgroundImage).setBackground();
             TextView tabTitle = customTab.getCustomView().findViewById(R.id.customTabCategoryTv);
             tabTitle.setText(tabTitles.get(i));
+            ImageView tabView=customTab.getCustomView().findViewById(R.id.customTabBackgroundImage);
+            Glide.with(getActivity()).load(tabImageUrls.get(i)).into(tabView);
         }
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new TrendingNewsFragment(), "Trending News");
-        tabTitles.add("Trending News");
+        tabTitles.add("Trending");
         adapter.addFragment(new BusinessNewsFrament(),"Business News");
-        tabTitles.add("Business News");
+        tabTitles.add("Business");
         adapter.addFragment(new EntertainmentNewsFragment(),"Entertainment News");
-        tabTitles.add("Entertainment News");
+        tabTitles.add("Entertainment");
         adapter.addFragment(new GeneralNewsFragment(),"General News");
-        tabTitles.add("General News");
+        tabTitles.add("General");
         adapter.addFragment(new HealthNewsFragment(),"Health News");
-        tabTitles.add("Health News");
+        tabTitles.add("Health");
         adapter.addFragment(new ScienceNewsFragment(),"Science News");
-        tabTitles.add("Science News");
+        tabTitles.add("Science");
         adapter.addFragment(new SportsNewsFragment(),"Sports News");
-        tabTitles.add("Sports News");
+        tabTitles.add("Sports");
         adapter.addFragment(new TechnologyNewsFragment(),"Technology News");
-        tabTitles.add("Technology News");
+        tabTitles.add("Technology");
         viewPager.setAdapter(adapter);
         viewPager.setPageTransformer(true, new RotateUpTransformer());
     }

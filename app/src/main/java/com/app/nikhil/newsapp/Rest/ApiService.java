@@ -44,9 +44,9 @@ public class ApiService {
 
 
 
-    public void getTopHeadlines(String apiKey,String country, String query,int noOfResults,final ResponseCallback<TopHeadlinesResponse> callback)
+    public void getTopHeadlines(String apiKey,String country, String category,String query,int noOfResults,final ResponseCallback<TopHeadlinesResponse> callback)
     {
-        Call<TopHeadlinesResponse> call=newsAPI.getTopHeadLines(apiKey,country,query,noOfResults);
+        Call<TopHeadlinesResponse> call=newsAPI.getTopHeadLines(apiKey,country,query,noOfResults,category);
 
         call.enqueue(new Callback<TopHeadlinesResponse>() {
             @Override
