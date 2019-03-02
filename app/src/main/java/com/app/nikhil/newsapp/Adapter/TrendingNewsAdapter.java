@@ -88,7 +88,7 @@ public class TrendingNewsAdapter extends RecyclerView.Adapter<TrendingNewsAdapte
             articleImageView=itemView.findViewById(R.id.newsImage);
             articleTitleTv=itemView.findViewById(R.id.articleTitleTv);
             articleDescriptionTv=itemView.findViewById(R.id.articleDescriptionTv);
-            saveNewsOffline=itemView.findViewById(R.id.saveImageOfflineBtn);
+       //     saveNewsOffline=itemView.findViewById(R.id.saveImageOfflineBtn);
         }
 
 

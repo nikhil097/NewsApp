@@ -29,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.nikhil.newsapp.Adapter.NewsSwipeAdapter;
 import com.app.nikhil.newsapp.Adapter.TrendingNewsAdapter;
 import com.app.nikhil.newsapp.NewsResponseBody.TopHeadlinesResponse;
 import com.app.nikhil.newsapp.Pojo.Article;
@@ -39,6 +40,7 @@ import com.app.nikhil.newsapp.Rest.ResponseCallback;
 import com.app.nikhil.newsapp.Rest.SQLiteDB;
 import com.app.nikhil.newsapp.UI.Activity.ArticleDetailActivity;
 import com.chootdev.recycleclick.RecycleClick;
+import com.daimajia.swipe.util.Attributes;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,7 +58,7 @@ public class TrendingNewsFragment extends Fragment {
     ApiService apiService;
 
     SQLiteDatabase sqLiteDatabase;
-    TrendingNewsAdapter trendingNewsAdapter;
+    NewsSwipeAdapter trendingNewsAdapter;
 
     RecyclerView trendingNewsRv;
 
@@ -124,10 +126,11 @@ public class TrendingNewsFragment extends Fragment {
 
     public void populateTrendingNewsView(final ArrayList<Article> trendingArticlesList)
     {
-        trendingNewsAdapter=new TrendingNewsAdapter(trendingArticlesList);
+        trendingNewsAdapter=new NewsSwipeAdapter(getActivity(),trendingArticlesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         trendingNewsRv.setLayoutManager(mLayoutManager);
         trendingNewsRv.setItemAnimator(new DefaultItemAnimator());
+        ((NewsSwipeAdapter) trendingNewsAdapter).setMode(Attributes.Mode.Single);
         trendingNewsRv.setAdapter(trendingNewsAdapter);
 
         RecycleClick.addTo(trendingNewsRv).setOnItemClickListener(new RecycleClick.OnItemClickListener() {
