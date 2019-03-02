@@ -130,6 +130,7 @@ public class TrendingNewsFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         trendingNewsRv.setLayoutManager(mLayoutManager);
         trendingNewsRv.setItemAnimator(new DefaultItemAnimator());
+        trendingNewsRv.getParent().requestDisallowInterceptTouchEvent(true);
         ((NewsSwipeAdapter) trendingNewsAdapter).setMode(Attributes.Mode.Single);
         trendingNewsRv.setAdapter(trendingNewsAdapter);
 

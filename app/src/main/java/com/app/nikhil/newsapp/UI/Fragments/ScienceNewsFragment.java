@@ -79,9 +79,14 @@ public class ScienceNewsFragment extends Fragment {
                 List<Article> articles=topHeadlinesResponse.getArticles();
                 int totalResults=topHeadlinesResponse.getTotalResults();
 
+                if(totalResults>20)
+                {
+                    totalResults=20;
+                }
+
                 ArrayList<Article> trendingArticlesList=new ArrayList<>();
 
-                for(int i=0;i<20;i++)
+                for(int i=0;i<totalResults;i++)
                 {
                     trendingArticlesList.add(articles.get(i));
                 }

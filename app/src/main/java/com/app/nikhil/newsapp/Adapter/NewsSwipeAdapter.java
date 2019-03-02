@@ -72,6 +72,7 @@ public class NewsSwipeAdapter extends RecyclerSwipeAdapter<NewsSwipeAdapter.Simp
             // Drag From Left
             viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, viewHolder.swipeLayout.findViewById(R.id.bottom_wrapper1));
 
+            viewHolder.swipeLayout.setLeftSwipeEnabled(false);
 
             // Handling different events when swiping
             viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {

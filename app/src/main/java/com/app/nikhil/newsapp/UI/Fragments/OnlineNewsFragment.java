@@ -3,6 +3,8 @@ package com.app.nikhil.newsapp.UI.Fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -25,6 +27,8 @@ import com.app.nikhil.newsapp.Rest.ApiCredentals;
 import com.app.nikhil.newsapp.Rest.ApiService;
 import com.app.nikhil.newsapp.Rest.ResponseCallback;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -127,12 +131,28 @@ public class OnlineNewsFragment extends Fragment {
             Log.v("tab1",tab.getId()+" "+tab.getCategoryName());
         }
         for(int i=0;i<tabTitles.size();i++) {
-            TabLayout.Tab customTab = newsCategoryTabs.getTabAt(i).setCustomView(R.layout.custom_category_news_tab);
+            final TabLayout.Tab customTab = newsCategoryTabs.getTabAt(i);
+
+            customTab.setCustomView(R.layout.custom_category_news_tab);
         //    customTab.getCustomView().findViewById(R.id.customTabBackgroundImage).setBackground();
             TextView tabTitle = customTab.getCustomView().findViewById(R.id.customTabCategoryTv);
             tabTitle.setText(tabsList.get(i).getCategoryName());
             ImageView tabView=customTab.getCustomView().findViewById(R.id.customTabBackgroundImage);
-            Glide.with(getActivity()).load(tabsList.get(i).getUrlToFirstPostImage()).into(tabView);
+           Glide.with(getActivity()).load(tabsList.get(i).getUrlToFirstPostImage()).into(tabView);
+
+          //  customTab.setIcon(getResources().getDrawable(R.drawable.ic_launcher_background));
+
+
+          /*  Glide.with(this)
+                    .asBitmap()
+                    .load(tabsList.get(i).getUrlToFirstPostImage())
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            customTab.getCustomView().setBackground(new BitmapDrawable(getResources(),resource));
+
+                        }
+                    });*/
         }
     }
 
@@ -182,6 +202,8 @@ public class OnlineNewsFragment extends Fragment {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
+
+
 
         @Override
         public CharSequence getPageTitle(int position) {
