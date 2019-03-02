@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
 import com.app.nikhil.newsapp.NewsResponseBody.TopHeadlinesResponse;
 import com.app.nikhil.newsapp.Pojo.Article;
+import com.app.nikhil.newsapp.Pojo.Tab;
 import com.app.nikhil.newsapp.R;
 import com.app.nikhil.newsapp.Rest.ApiCredentals;
 import com.app.nikhil.newsapp.Rest.ApiService;
@@ -26,6 +27,7 @@ import com.app.nikhil.newsapp.Rest.ResponseCallback;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,6 +40,7 @@ public class OnlineNewsFragment extends Fragment {
     ArrayList<String> tabTitles;
     ArrayList<String> tabImageUrls;
     ApiService apiService;
+    ArrayList<Tab> tabsList;
 
     int counter=0;
     String ImagesUrl=null;
@@ -74,6 +77,8 @@ public class OnlineNewsFragment extends Fragment {
 
         counter=0;
 
+        tabsList = new ArrayList<>();
+
         for (int i = 0; i < tabTitles.size(); i++) {
             SharedPreferences mPreferences = getActivity().getSharedPreferences("NewsDB", Context.MODE_PRIVATE);
             String countryCode = mPreferences.getString("userCountry", "in");
@@ -88,19 +93,19 @@ public class OnlineNewsFragment extends Fragment {
                 public void success(TopHeadlinesResponse topHeadlinesResponse) {
 
                     counter++;
-
                     List<Article> articles = topHeadlinesResponse.getArticles();
                     int totalResults = topHeadlinesResponse.getTotalResults();
                     if (totalResults != 0) {
                         tabImageUrls.add(articles.get(0).getUrlToImage());
                         ImagesUrl+=articles.get(0).getUrlToImage()+"\n";
+                        tabsList.add(new Tab(tabTitles.get(finalI),articles.get(0).getUrlToImage(),finalI));
                     }
                     else{
                         tabImageUrls.add("");
                     }
                     if (counter ==tabTitles.size())
                     {
-                        Log.v("sabkeurl",ImagesUrl);
+                        Log.v("imageurl",ImagesUrl);
                         setUpCustomCategoryTabs();
                     }
                 }
@@ -117,13 +122,18 @@ public class OnlineNewsFragment extends Fragment {
     }
     public void setUpCustomCategoryTabs()
     {
+        Collections.sort(tabsList);
+        for(Tab tab:tabsList)
+        {
+            Log.v("tab1",tab.getId()+" "+tab.getCategoryName());
+        }
         for(int i=0;i<tabTitles.size();i++) {
             TabLayout.Tab customTab = newsCategoryTabs.getTabAt(i).setCustomView(R.layout.custom_category_news_tab);
         //    customTab.getCustomView().findViewById(R.id.customTabBackgroundImage).setBackground();
             TextView tabTitle = customTab.getCustomView().findViewById(R.id.customTabCategoryTv);
-            tabTitle.setText(tabTitles.get(i));
+            tabTitle.setText(tabsList.get(i).getCategoryName());
             ImageView tabView=customTab.getCustomView().findViewById(R.id.customTabBackgroundImage);
-            Glide.with(getActivity()).load(tabImageUrls.get(i)).into(tabView);
+            Glide.with(getActivity()).load(tabsList.get(i).getUrlToFirstPostImage()).into(tabView);
         }
     }
 
