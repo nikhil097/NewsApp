@@ -73,7 +73,6 @@ public class OnlineNewsFragment extends Fragment {
 
     public void fetchUrlCustomTabBackgroundImage() {
 
-     //   tabImageUrls.add("");
 
         counter=0;
 
