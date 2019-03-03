@@ -173,7 +173,7 @@ public class SearchNewsFragment extends Fragment {
 
     public void displayFilterAlertDialog(final ArrayList<NewsSource> sources)
     {
-        AlertDialog.Builder alertDialog=new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder alertDialog=new AlertDialog.Builder(getActivity());
         alertDialog.setTitle("Filter Results");
         View view=LayoutInflater.from(getActivity()).inflate(R.layout.filter_search_results,null,false);
 
@@ -213,42 +213,42 @@ public class SearchNewsFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
+                int noOfSelectedSourcesCounter=0;
 
              for(int i=0;i<sources.size();i++)
              {
                  if(sources.get(i).isIschecked())
                  {
                      sourcesSelectedString+=sources.get(i).getId()+",";
+                     noOfSelectedSourcesCounter++;
                  }
              }
 
-             if(sourcesSelectedString.length()>0)
-             sourcesSelectedString=sourcesSelectedString.substring(0,sourcesSelectedString.length()-1);
+             if(noOfSelectedSourcesCounter<20) {
+                 if (sourcesSelectedString.length() > 0)
+                     sourcesSelectedString = sourcesSelectedString.substring(0, sourcesSelectedString.length() - 1);
 
-             sortByQuery=sortBySpinner.getSelectedItem().toString();
+                 sortByQuery = sortBySpinner.getSelectedItem().toString();
 
-             if(sortByQuery.equalsIgnoreCase("Relevance"))
-             {
-                 sortByQuery="relevancy";
+                 if (sortByQuery.equalsIgnoreCase("Relevance")) {
+                     sortByQuery = "relevancy";
+                 } else if (sortByQuery.equalsIgnoreCase("Recent First")) {
+                     sortByQuery = "publishedAt";
+                 }
+
+                 selectedSortByMode = sortBySpinner.getSelectedItemPosition();
+
+                 fetchResults(sourcesSelectedString, sortByQuery);
              }
-             else if(sortByQuery.equalsIgnoreCase("Recent First"))
-             {
-                 sortByQuery="publishedAt";
+             else{
+                 Toast.makeText(getActivity(), "At most 20 sources can be selected", Toast.LENGTH_SHORT).show();
+        //         alertDialog.show();
+                 displayFilterAlertDialog(sources);
              }
-
-             selectedSortByMode=sortBySpinner.getSelectedItemPosition();
-
-             fetchResults(sourcesSelectedString,sortByQuery);
-
             }
         });
 
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
+        alertDialog.setCancelable(false);
 
         alertDialog.show();
 
