@@ -70,6 +70,21 @@ public class TrendingNewsFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static TrendingNewsFragment newInstance(String title) {
+        TrendingNewsFragment fragment = new TrendingNewsFragment();
+
+        Bundle args = new Bundle();
+        args.putCharSequence("title", title);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+
+    public String getTitle() {
+        Bundle args = getArguments();
+        return args.getCharSequence("title", "NO TITLE FOUND").toString();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,7 +117,8 @@ public class TrendingNewsFragment extends Fragment {
     {
         SharedPreferences mPreferences = getActivity().getSharedPreferences("NewsDB", Context.MODE_PRIVATE);
         String countryCode=mPreferences.getString("userCountry","in");
-        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,"","",20, new ResponseCallback<TopHeadlinesResponse>() {
+        Log.v("tag1",getTag().toString());
+        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,getTitle(),"",20, new ResponseCallback<TopHeadlinesResponse>() {
                     @Override
                     public void success(TopHeadlinesResponse topHeadlinesResponse) {
 

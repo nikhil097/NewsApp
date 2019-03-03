@@ -154,21 +154,21 @@ public class OnlineNewsFragment extends Fragment {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new TrendingNewsFragment(), "Trending News");
+        adapter.addFragment(TrendingNewsFragment.newInstance(""), "Trending");
         tabTitles.add("Trending");
-        adapter.addFragment(new BusinessNewsFrament(),"Business News");
+        adapter.addFragment(TrendingNewsFragment.newInstance("Business"),"Business");
         tabTitles.add("Business");
-        adapter.addFragment(new EntertainmentNewsFragment(),"Entertainment News");
+        adapter.addFragment(TrendingNewsFragment.newInstance("Entertainment"),"Entertainment");
         tabTitles.add("Entertainment");
-        adapter.addFragment(new GeneralNewsFragment(),"General News");
+        adapter.addFragment(TrendingNewsFragment.newInstance("General"),"General");
         tabTitles.add("General");
-        adapter.addFragment(new HealthNewsFragment(),"Health News");
+        adapter.addFragment(TrendingNewsFragment.newInstance("Health"),"Health");
         tabTitles.add("Health");
-        adapter.addFragment(new ScienceNewsFragment(),"Science News");
+        adapter.addFragment(TrendingNewsFragment.newInstance("Science"),"Science");
         tabTitles.add("Science");
-        adapter.addFragment(new SportsNewsFragment(),"Sports News");
+        adapter.addFragment(TrendingNewsFragment.newInstance("Sports"),"Sports");
         tabTitles.add("Sports");
-        adapter.addFragment(new TechnologyNewsFragment(),"Technology News");
+        adapter.addFragment(TrendingNewsFragment.newInstance("Technology"),"Technology");
         tabTitles.add("Technology");
         viewPager.setAdapter(adapter);
         viewPager.setPageTransformer(true, new RotateUpTransformer());
