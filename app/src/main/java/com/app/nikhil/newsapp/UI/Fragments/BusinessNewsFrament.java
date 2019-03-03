@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.nikhil.newsapp.Adapter.NewsSwipeAdapter;
+import com.app.nikhil.newsapp.Adapter.TrendingNewsAdapter;
 import com.app.nikhil.newsapp.NewsResponseBody.TopHeadlinesResponse;
 import com.app.nikhil.newsapp.Pojo.Article;
 import com.app.nikhil.newsapp.R;
@@ -40,7 +41,7 @@ public class BusinessNewsFrament extends Fragment {
     ApiService apiService;
 
     SQLiteDatabase sqLiteDatabase;
-    NewsSwipeAdapter businessNewsAdapter;
+    TrendingNewsAdapter businessNewsAdapter;
 
     RecyclerView businessNewsRv;
     private ArrayList<Article> savedArticlesList;
@@ -160,11 +161,10 @@ public class BusinessNewsFrament extends Fragment {
 
     public void populateTrendingNewsView(final ArrayList<Article> trendingArticlesList)
     {
-        businessNewsAdapter =new NewsSwipeAdapter(getActivity(),trendingArticlesList);
+        businessNewsAdapter =new TrendingNewsAdapter(trendingArticlesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         businessNewsRv.setLayoutManager(mLayoutManager);
         businessNewsRv.setItemAnimator(new DefaultItemAnimator());
-        ((NewsSwipeAdapter) businessNewsAdapter).setMode(Attributes.Mode.Single);
         businessNewsRv.setAdapter(businessNewsAdapter);
 
         RecycleClick.addTo(businessNewsRv).setOnItemClickListener(new RecycleClick.OnItemClickListener() {

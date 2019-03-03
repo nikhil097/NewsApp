@@ -40,7 +40,7 @@ public class TrendingNewsAdapter extends RecyclerView.Adapter<TrendingNewsAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TrendingNewsViewHolder trendingNewsViewHolder, int i) {
+    public void onBindViewHolder(@NonNull final TrendingNewsViewHolder trendingNewsViewHolder, int i) {
 
         final int finalI =i;
         Article article=trendingArticlesList.get(finalI);
@@ -53,10 +53,10 @@ public class TrendingNewsAdapter extends RecyclerView.Adapter<TrendingNewsAdapte
             public void onClick(View v) {
 
                 saveNewsArticle(trendingArticlesList.get(finalI));
-        //        trendingNewsViewHolder.saveNewsOffline.setBackground(context.getResources().getDrawable(R.drawable.icons8_bookmark_filled_500));
+                trendingNewsViewHolder.saveNewsOffline.setBackground(context.getResources().getDrawable(R.drawable.icons8_bookmark_filled_500));
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          //          trendingNewsViewHolder.saveNewsOffline.getBackground().setTint(context.getResources().getColor(android.R.color.holo_blue_dark));
+                    trendingNewsViewHolder.saveNewsOffline.getBackground().setTint(context.getResources().getColor(android.R.color.holo_blue_dark));
                 }
             }
         });

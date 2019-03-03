@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.nikhil.newsapp.Adapter.NewsSwipeAdapter;
+import com.app.nikhil.newsapp.Adapter.TrendingNewsAdapter;
 import com.app.nikhil.newsapp.NewsResponseBody.TopHeadlinesResponse;
 import com.app.nikhil.newsapp.Pojo.Article;
 import com.app.nikhil.newsapp.R;
@@ -37,7 +38,7 @@ public class SportsNewsFragment extends Fragment {
     ApiService apiService;
 
     SQLiteDatabase sqLiteDatabase;
-    NewsSwipeAdapter sportsNewsAdapter;
+    TrendingNewsAdapter sportsNewsAdapter;
 
     RecyclerView sportsNewsRv;
     private ArrayList<Article> savedArticlesList;
@@ -154,11 +155,10 @@ public class SportsNewsFragment extends Fragment {
 
     public void populateTrendingNewsView(final ArrayList<Article> trendingArticlesList)
     {
-        sportsNewsAdapter =new NewsSwipeAdapter(getActivity(),trendingArticlesList);
+        sportsNewsAdapter =new TrendingNewsAdapter(trendingArticlesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         sportsNewsRv.setLayoutManager(mLayoutManager);
         sportsNewsRv.setItemAnimator(new DefaultItemAnimator());
-        ((NewsSwipeAdapter) sportsNewsAdapter).setMode(Attributes.Mode.Single);
         sportsNewsRv.setAdapter(sportsNewsAdapter);
 
     }

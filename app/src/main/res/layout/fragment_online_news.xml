@@ -17,12 +17,12 @@
 
     </android.support.design.widget.TabLayout>
 
-    <com.app.nikhil.newsapp.CategoryViewPager
+    <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/newsCategoryTabs"
         android:id="@+id/homeViewPager">
 
-    </com.app.nikhil.newsapp.CategoryViewPager>
+    </android.support.v4.view.ViewPager>
 
 </RelativeLayout>

@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.nikhil.newsapp.Adapter.NewsSwipeAdapter;
+import com.app.nikhil.newsapp.Adapter.TrendingNewsAdapter;
 import com.app.nikhil.newsapp.NewsResponseBody.TopHeadlinesResponse;
 import com.app.nikhil.newsapp.Pojo.Article;
 import com.app.nikhil.newsapp.R;
@@ -40,7 +41,7 @@ public class HealthNewsFragment extends Fragment {
     ApiService apiService;
 
     SQLiteDatabase sqLiteDatabase;
-    NewsSwipeAdapter healthNewsAdapter;
+    TrendingNewsAdapter healthNewsAdapter;
 
     RecyclerView healthNewsRv;
     private ArrayList<Article> savedArticlesList;
@@ -161,11 +162,10 @@ public class HealthNewsFragment extends Fragment {
 
     public void populateTrendingNewsView(final ArrayList<Article> trendingArticlesList)
     {
-        healthNewsAdapter =new NewsSwipeAdapter(getActivity(),trendingArticlesList);
+        healthNewsAdapter =new TrendingNewsAdapter(trendingArticlesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         healthNewsRv.setLayoutManager(mLayoutManager);
         healthNewsRv.setItemAnimator(new DefaultItemAnimator());
-        ((NewsSwipeAdapter) healthNewsAdapter).setMode(Attributes.Mode.Single);
         healthNewsRv.setAdapter(healthNewsAdapter);
 
     }
