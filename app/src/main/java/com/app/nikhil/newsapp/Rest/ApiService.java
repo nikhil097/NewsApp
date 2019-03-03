@@ -4,7 +4,10 @@ import android.util.Log;
 
 import com.app.nikhil.newsapp.NewsRequestBody.SearchNewsRequestBody;
 import com.app.nikhil.newsapp.NewsResponseBody.SearchNewsResponseBody;
+import com.app.nikhil.newsapp.NewsResponseBody.SourcesResponse;
 import com.app.nikhil.newsapp.NewsResponseBody.TopHeadlinesResponse;
+
+import java.io.IOException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -56,11 +59,15 @@ public class ApiService {
                 if(response.isSuccessful()) {
                     callback.success(response.body());
                 }
+                else{
+                        callback.failure(new TopHeadlinesResponse());
+                }
 
             }
 
             @Override
             public void onFailure(Call<TopHeadlinesResponse> call, Throwable t) {
+
 
             }
         });
@@ -85,6 +92,28 @@ public class ApiService {
 
             }
         });
+    }
+
+
+    public void getSources(String apiKey,final ResponseCallback<SourcesResponse> callback)
+    {
+        Call<SourcesResponse> call=newsAPI.getSources(apiKey);
+
+        call.enqueue(new Callback<SourcesResponse>() {
+            @Override
+            public void onResponse(Call<SourcesResponse> call, Response<SourcesResponse> response) {
+
+                if(response.isSuccessful())
+                callback.success(response.body());
+
+            }
+
+            @Override
+            public void onFailure(Call<SourcesResponse> call, Throwable t) {
+
+            }
+        });
+
     }
 
 

@@ -116,8 +116,6 @@ public class OnlineNewsFragment extends Fragment {
             });
         }
 
-    //    setUpCustomCategoryTabs();
-
     }
     public void setUpCustomCategoryTabs()
     {

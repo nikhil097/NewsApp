@@ -1,6 +1,8 @@
 package com.app.nikhil.newsapp.UI.Fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,14 +16,25 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
+import com.app.nikhil.newsapp.Adapter.SourcesAdapter;
 import com.app.nikhil.newsapp.Adapter.TrendingNewsAdapter;
 import com.app.nikhil.newsapp.NewsRequestBody.SearchNewsRequestBody;
 import com.app.nikhil.newsapp.NewsResponseBody.SearchNewsResponseBody;
+import com.app.nikhil.newsapp.NewsResponseBody.SourcesResponse;
 import com.app.nikhil.newsapp.Pojo.Article;
+import com.app.nikhil.newsapp.Pojo.NewsSource;
 import com.app.nikhil.newsapp.R;
 import com.app.nikhil.newsapp.Rest.ApiCredentals;
 import com.app.nikhil.newsapp.Rest.ApiService;
@@ -31,6 +44,7 @@ import com.app.nikhil.newsapp.UI.Activity.ArticleDetailActivity;
 import com.chootdev.recycleclick.RecycleClick;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SearchNewsFragment extends Fragment {
@@ -41,22 +55,37 @@ public class SearchNewsFragment extends Fragment {
     RecyclerView searchNewsRv;
     TrendingNewsAdapter searchNewsAdapter;
 
+    String sourcesSelectedString="";
+
+    ArrayList<NewsSource> sources;
+    Spinner sortBySpinner;
+    String sortByQuery;
+
+
     ArrayList<Article> savedArticlesList;
+    private int selectedSortByMode=0;
 
     public SearchNewsFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.online_news_navigation_fragments,menu);
 
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_search_news, container, false);
+        apiService=new ApiService();
+
+        setHasOptionsMenu(true);
+        fetchSources();
 
         searchNewsEt=view.findViewById(R.id.searchNewsET);
-        apiService=new ApiService();
         searchNewsRv=view.findViewById(R.id.resultNewsRv);
 
         savedArticlesList=new ArrayList<>();
@@ -72,40 +101,7 @@ public class SearchNewsFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 if (s.toString().length() > 3) {
-                    apiService.getSearchNewsResults(ApiCredentals.API_KEY, searchNewsEt.getText().toString(), "", "", "en", 1, 20, new ResponseCallback<SearchNewsResponseBody>() {
-                        @Override
-                        public void success(SearchNewsResponseBody searchNewsResponseBody) {
-
-                            List<Article> articles=searchNewsResponseBody.getArticles();
-
-                            int totalResults=searchNewsResponseBody.getTotalResults();
-
-                            if(totalResults>20)
-                            {
-                                totalResults=20;
-                            }
-
-                            ArrayList<Article> trendingArticlesList=new ArrayList<>();
-
-                            for(int i=0;i<totalResults;i++)
-                            {
-
-                                if(checkIfArticleAlreadySaved(articles.get(i)))
-                                {
-                                    articles.get(i).setIsSaved(true);
-                                }
-                                trendingArticlesList.add(articles.get(i));
-                            }
-
-                            populateTrendingNewsView(trendingArticlesList);
-
-                        }
-
-                        @Override
-                        public void failure(SearchNewsResponseBody searchNewsResponseBody) {
-
-                        }
-                    });
+                   fetchResults("","");
                 }
             }
             @Override
@@ -117,6 +113,166 @@ public class SearchNewsFragment extends Fragment {
 
         return view;
     }
+
+
+    public void fetchResults(String sources,String sortBy)
+    {
+        Log.v("queries",sortBy+" "+sources);
+
+        apiService.getSearchNewsResults(ApiCredentals.API_KEY, searchNewsEt.getText().toString(), sourcesSelectedString, sortByQuery, "en", 1, 20, new ResponseCallback<SearchNewsResponseBody>() {
+            @Override
+            public void success(SearchNewsResponseBody searchNewsResponseBody) {
+
+                List<Article> articles=searchNewsResponseBody.getArticles();
+
+                int totalResults=searchNewsResponseBody.getTotalResults();
+
+                if(totalResults>20)
+                {
+                    totalResults=20;
+                }
+
+                ArrayList<Article> trendingArticlesList=new ArrayList<>();
+
+                for(int i=0;i<totalResults;i++)
+                {
+
+                    if(checkIfArticleAlreadySaved(articles.get(i)))
+                    {
+                        articles.get(i).setIsSaved(true);
+                    }
+                    trendingArticlesList.add(articles.get(i));
+                }
+
+                populateTrendingNewsView(trendingArticlesList);
+
+            }
+
+            @Override
+            public void failure(SearchNewsResponseBody searchNewsResponseBody) {
+
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id=item.getItemId();
+        if(id==R.id.filterNews)
+        {
+
+            displayFilterAlertDialog(sources);
+
+            return true;
+
+        }
+
+        return false;
+    }
+
+
+    public void displayFilterAlertDialog(final ArrayList<NewsSource> sources)
+    {
+        AlertDialog.Builder alertDialog=new AlertDialog.Builder(getActivity());
+        alertDialog.setTitle("Filter Results");
+        View view=LayoutInflater.from(getActivity()).inflate(R.layout.filter_search_results,null,false);
+
+
+        RecyclerView sourcesRv=view.findViewById(R.id.sourcesRv);
+
+        SourcesAdapter sourcesAdapter=new SourcesAdapter(getActivity(),sources);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        sourcesRv.setLayoutManager(mLayoutManager);
+        sourcesRv.setItemAnimator(new DefaultItemAnimator());
+        sourcesRv.setAdapter(sourcesAdapter);
+
+
+        RecycleClick.addTo(sourcesRv).setOnItemClickListener(new RecycleClick.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+                CheckBox sourceStateCB=v.findViewById(R.id.sourceStateCB);
+                sources.get(position).setIschecked(!sources.get(position).isIschecked());
+                sourceStateCB.setChecked(!sourceStateCB.isChecked());
+            }
+        });
+
+        sortBySpinner=view.findViewById(R.id.sortBySpinner);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter(
+                getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sortBy));
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortBySpinner.setAdapter(adapter);
+        sortBySpinner.setSelection(selectedSortByMode);
+
+        alertDialog.setView(view);
+        sourcesSelectedString="";
+
+        alertDialog.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+
+             for(int i=0;i<sources.size();i++)
+             {
+                 if(sources.get(i).isIschecked())
+                 {
+                     sourcesSelectedString+=sources.get(i).getId()+",";
+                 }
+             }
+
+             if(sourcesSelectedString.length()>0)
+             sourcesSelectedString=sourcesSelectedString.substring(0,sourcesSelectedString.length()-1);
+
+             sortByQuery=sortBySpinner.getSelectedItem().toString();
+
+             if(sortByQuery.equalsIgnoreCase("Relevance"))
+             {
+                 sortByQuery="relevancy";
+             }
+             else if(sortByQuery.equalsIgnoreCase("Recent First"))
+             {
+                 sortByQuery="publishedAt";
+             }
+
+             selectedSortByMode=sortBySpinner.getSelectedItemPosition();
+
+             fetchResults(sourcesSelectedString,sortByQuery);
+
+            }
+        });
+
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        alertDialog.show();
+
+    }
+
+    public void fetchSources()
+    {
+        apiService.getSources(ApiCredentals.API_KEY,new ResponseCallback<SourcesResponse>() {
+            @Override
+            public void success(SourcesResponse sourcesResponse) {
+
+                sources= (ArrayList<NewsSource>) sourcesResponse.getSources();
+
+            }
+
+            @Override
+            public void failure(SourcesResponse sourcesResponse) {
+
+            }
+        });
+
+
+    }
+
 
     public boolean checkIfArticleAlreadySaved(Article article)
     {

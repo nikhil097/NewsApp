@@ -22,6 +22,8 @@ public class TopHeadlinesResponse {
     List<Article> articles;
 
 
+    @SerializedName("message")
+    String message;
 
     public String getStatus() {
         return status;
@@ -55,5 +57,11 @@ public class TopHeadlinesResponse {
         this.articles = articles;
     }
 
+    public String getMessage() {
+        return message;
+    }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }
