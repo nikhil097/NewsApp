@@ -1,7 +1,8 @@
-package com.app.nikhil.newsapp.UI.Fragments;
+package com.app.nikhil.newsapp.UI.Fragments.OnlineFragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,6 +26,8 @@ import com.app.nikhil.newsapp.Rest.ApiCredentals;
 import com.app.nikhil.newsapp.Rest.ApiService;
 import com.app.nikhil.newsapp.Rest.ResponseCallback;
 import com.app.nikhil.newsapp.Rest.SQLiteDB;
+import com.app.nikhil.newsapp.UI.Activity.ArticleDetailActivity;
+import com.chootdev.recycleclick.RecycleClick;
 import com.daimajia.swipe.util.Attributes;
 
 import java.util.ArrayList;
@@ -33,17 +36,17 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SportsNewsFragment extends Fragment {
+public class EntertainmentNewsFragment extends Fragment {
 
     ApiService apiService;
 
     SQLiteDatabase sqLiteDatabase;
-    TrendingNewsAdapter sportsNewsAdapter;
+    TrendingNewsAdapter businessNewsAdapter;
 
-    RecyclerView sportsNewsRv;
+    RecyclerView entertainmentNewsRv;
     private ArrayList<Article> savedArticlesList;
 
-    public SportsNewsFragment() {
+    public EntertainmentNewsFragment() {
         // Required empty public constructor
     }
 
@@ -51,21 +54,24 @@ public class SportsNewsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        apiService=new ApiService();
+        // Inflate the layout for this fragment
+            apiService=new ApiService();
 
-        SQLiteDB sqLiteDB=new SQLiteDB(getActivity());
-        sqLiteDatabase=sqLiteDB.getWritableDatabase();
+            SQLiteDB sqLiteDB=new SQLiteDB(getActivity());
+            sqLiteDatabase=sqLiteDB.getWritableDatabase();
 
         savedArticlesList=new ArrayList<>();
 
         fetchSavedNewsFromDatabase();
 
 
-        View view= inflater.inflate(R.layout.fragment_sports_news, container, false);
+            View view= inflater.inflate(R.layout.fragment_entertainment_news, container, false);
 
-        sportsNewsRv =view.findViewById(R.id.sportsNewsRv);
-        return view;
+            entertainmentNewsRv =view.findViewById(R.id.entertainmentNewsRv);
+            return view;
     }
+
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -79,16 +85,18 @@ public class SportsNewsFragment extends Fragment {
     {
         SharedPreferences mPreferences = getActivity().getSharedPreferences("NewsDB", Context.MODE_PRIVATE);
         String countryCode=mPreferences.getString("userCountry","in");
-        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,"sports","",20, new ResponseCallback<TopHeadlinesResponse>() {
+        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,"entertainment","",20, new ResponseCallback<TopHeadlinesResponse>() {
             @Override
             public void success(TopHeadlinesResponse topHeadlinesResponse) {
 
                 List<Article> articles=topHeadlinesResponse.getArticles();
                 int totalResults=topHeadlinesResponse.getTotalResults();
+
                 if(totalResults>20)
                 {
                     totalResults=20;
                 }
+
                 ArrayList<Article> trendingArticlesList=new ArrayList<>();
 
                 for(int i=0;i<totalResults;i++)
@@ -153,13 +161,23 @@ public class SportsNewsFragment extends Fragment {
     }
 
 
+
     public void populateTrendingNewsView(final ArrayList<Article> trendingArticlesList)
     {
-        sportsNewsAdapter =new TrendingNewsAdapter(trendingArticlesList);
+        businessNewsAdapter =new TrendingNewsAdapter(trendingArticlesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        sportsNewsRv.setLayoutManager(mLayoutManager);
-        sportsNewsRv.setItemAnimator(new DefaultItemAnimator());
-        sportsNewsRv.setAdapter(sportsNewsAdapter);
+        entertainmentNewsRv.setLayoutManager(mLayoutManager);
+        entertainmentNewsRv.setItemAnimator(new DefaultItemAnimator());
+        entertainmentNewsRv.setAdapter(businessNewsAdapter);
+
+        RecycleClick.addTo(entertainmentNewsRv).setOnItemClickListener(new RecycleClick.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+                startActivity(new Intent(getActivity(),ArticleDetailActivity.class).putExtra("article",trendingArticlesList.get(position)));
+
+            }
+        });
 
     }
 

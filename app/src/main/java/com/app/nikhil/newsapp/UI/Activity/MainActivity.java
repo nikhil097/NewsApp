@@ -1,37 +1,23 @@
 package com.app.nikhil.newsapp.UI.Activity;
 
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.LocationManager;
-import android.provider.Settings;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.MenuView;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.app.nikhil.newsapp.R;
-import com.app.nikhil.newsapp.UI.Fragments.OnlineNewsFragment;
+import com.app.nikhil.newsapp.UI.Fragments.OnlineFragments.OnlineNewsFragment;
 import com.app.nikhil.newsapp.UI.Fragments.SavedNewsFragment;
-import com.app.nikhil.newsapp.UI.Fragments.SplashScreen;
-import com.app.nikhil.newsapp.UI.Fragments.TrendingNewsFragment;
+import com.app.nikhil.newsapp.UI.Fragments.SearchNewsFragment;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 
@@ -70,7 +56,8 @@ public class MainActivity extends AppCompatActivity{
                 {
                     loadFragment(new SavedNewsFragment());
                 }
-                else{
+                else if(menuItem.getItemId()==R.id.searchNews){
+                    loadFragment(new SearchNewsFragment());
 
                 }
 

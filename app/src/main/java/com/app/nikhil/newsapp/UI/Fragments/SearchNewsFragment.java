@@ -1,25 +1,26 @@
 package com.app.nikhil.newsapp.UI.Fragments;
 
-
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
-import com.app.nikhil.newsapp.Adapter.NewsSwipeAdapter;
 import com.app.nikhil.newsapp.Adapter.TrendingNewsAdapter;
-import com.app.nikhil.newsapp.NewsResponseBody.TopHeadlinesResponse;
+import com.app.nikhil.newsapp.NewsRequestBody.SearchNewsRequestBody;
+import com.app.nikhil.newsapp.NewsResponseBody.SearchNewsResponseBody;
 import com.app.nikhil.newsapp.Pojo.Article;
 import com.app.nikhil.newsapp.R;
 import com.app.nikhil.newsapp.Rest.ApiCredentals;
@@ -28,94 +29,93 @@ import com.app.nikhil.newsapp.Rest.ResponseCallback;
 import com.app.nikhil.newsapp.Rest.SQLiteDB;
 import com.app.nikhil.newsapp.UI.Activity.ArticleDetailActivity;
 import com.chootdev.recycleclick.RecycleClick;
-import com.daimajia.swipe.util.Attributes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class GeneralNewsFragment extends Fragment {
+public class SearchNewsFragment extends Fragment {
 
+    EditText searchNewsEt;
     ApiService apiService;
 
-    SQLiteDatabase sqLiteDatabase;
-    TrendingNewsAdapter generalNewsAdapter;
+    RecyclerView searchNewsRv;
+    TrendingNewsAdapter searchNewsAdapter;
 
-    RecyclerView generalNewsRv;
-    private ArrayList<Article> savedArticlesList;
+    ArrayList<Article> savedArticlesList;
 
-    public GeneralNewsFragment() {
+    public SearchNewsFragment() {
         // Required empty public constructor
     }
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        apiService=new ApiService();
+        // Inflate the layout for this fragment
+        View view= inflater.inflate(R.layout.fragment_search_news, container, false);
 
-        SQLiteDB sqLiteDB=new SQLiteDB(getActivity());
-        sqLiteDatabase=sqLiteDB.getWritableDatabase();
+        searchNewsEt=view.findViewById(R.id.searchNewsET);
+        apiService=new ApiService();
+        searchNewsRv=view.findViewById(R.id.resultNewsRv);
 
         savedArticlesList=new ArrayList<>();
-
         fetchSavedNewsFromDatabase();
 
-
-        View view= inflater.inflate(R.layout.fragment_general_news, container, false);
-
-        generalNewsRv =view.findViewById(R.id.generalNewsRv);
-        return view;
-    }
-
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        fetchTrendingNews();
-
-    }
-
-
-    public void fetchTrendingNews()
-    {
-        SharedPreferences mPreferences = getActivity().getSharedPreferences("NewsDB", Context.MODE_PRIVATE);
-        String countryCode=mPreferences.getString("userCountry","in");
-        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,"general","",20, new ResponseCallback<TopHeadlinesResponse>() {
+        searchNewsEt.addTextChangedListener(new TextWatcher() {
             @Override
-            public void success(TopHeadlinesResponse topHeadlinesResponse) {
-
-                List<Article> articles=topHeadlinesResponse.getArticles();
-                int totalResults=topHeadlinesResponse.getTotalResults();
-
-                ArrayList<Article> trendingArticlesList=new ArrayList<>();
-
-                if(totalResults>20)
-                {
-                    totalResults=20;
-                }
-                for(int i=0;i<totalResults;i++)
-                {
-                    trendingArticlesList.add(articles.get(i));
-                    if(checkIfArticleAlreadySaved(articles.get(i)))
-                    {
-                        articles.get(i).setIsSaved(true);
-                    }
-                }
-
-                populateTrendingNewsView(trendingArticlesList);
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
 
             @Override
-            public void failure(TopHeadlinesResponse topHeadlinesResponse) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (s.toString().length() > 3) {
+                    apiService.getSearchNewsResults(ApiCredentals.API_KEY, searchNewsEt.getText().toString(), "", "", "en", 1, 20, new ResponseCallback<SearchNewsResponseBody>() {
+                        @Override
+                        public void success(SearchNewsResponseBody searchNewsResponseBody) {
+
+                            List<Article> articles=searchNewsResponseBody.getArticles();
+
+                            int totalResults=searchNewsResponseBody.getTotalResults();
+
+                            if(totalResults>20)
+                            {
+                                totalResults=20;
+                            }
+
+                            ArrayList<Article> trendingArticlesList=new ArrayList<>();
+
+                            for(int i=0;i<totalResults;i++)
+                            {
+
+                                if(checkIfArticleAlreadySaved(articles.get(i)))
+                                {
+                                    articles.get(i).setIsSaved(true);
+                                }
+                                trendingArticlesList.add(articles.get(i));
+                            }
+
+                            populateTrendingNewsView(trendingArticlesList);
+
+                        }
+
+                        @Override
+                        public void failure(SearchNewsResponseBody searchNewsResponseBody) {
+
+                        }
+                    });
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
 
             }
         });
+
+
+        return view;
     }
 
     public boolean checkIfArticleAlreadySaved(Article article)
@@ -158,16 +158,15 @@ public class GeneralNewsFragment extends Fragment {
         }
     }
 
-
     public void populateTrendingNewsView(final ArrayList<Article> trendingArticlesList)
     {
-        generalNewsAdapter =new TrendingNewsAdapter(trendingArticlesList);
+        searchNewsAdapter=new TrendingNewsAdapter(trendingArticlesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        generalNewsRv.setLayoutManager(mLayoutManager);
-        generalNewsRv.setItemAnimator(new DefaultItemAnimator());
-        generalNewsRv.setAdapter(generalNewsAdapter);
+        searchNewsRv.setLayoutManager(mLayoutManager);
+        searchNewsRv.setItemAnimator(new DefaultItemAnimator());
+        searchNewsRv.setAdapter(searchNewsAdapter);
 
-        RecycleClick.addTo(generalNewsRv).setOnItemClickListener(new RecycleClick.OnItemClickListener() {
+        RecycleClick.addTo(searchNewsRv).setOnItemClickListener(new RecycleClick.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
 

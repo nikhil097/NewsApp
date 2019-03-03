@@ -2,6 +2,8 @@ package com.app.nikhil.newsapp.Rest;
 
 import android.util.Log;
 
+import com.app.nikhil.newsapp.NewsRequestBody.SearchNewsRequestBody;
+import com.app.nikhil.newsapp.NewsResponseBody.SearchNewsResponseBody;
 import com.app.nikhil.newsapp.NewsResponseBody.TopHeadlinesResponse;
 
 import okhttp3.OkHttpClient;
@@ -63,6 +65,26 @@ public class ApiService {
             }
         });
 
+    }
+
+    public void getSearchNewsResults(String apiKey,String query,String sources,String sortBy,String language,int page,int pageSize, final ResponseCallback<SearchNewsResponseBody> callback)
+    {
+        Call<SearchNewsResponseBody> call=newsAPI.getSearchNewsResponse(apiKey,query,sources,sortBy,language,page,pageSize);
+
+        call.enqueue(new Callback<SearchNewsResponseBody>() {
+            @Override
+            public void onResponse(Call<SearchNewsResponseBody> call, Response<SearchNewsResponseBody> response) {
+                if (response.isSuccessful())
+                {
+                    callback.success(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchNewsResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
 

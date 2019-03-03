@@ -1,8 +1,7 @@
-package com.app.nikhil.newsapp.UI.Fragments;
+package com.app.nikhil.newsapp.UI.Fragments.OnlineFragments;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -26,27 +25,23 @@ import com.app.nikhil.newsapp.Rest.ApiCredentals;
 import com.app.nikhil.newsapp.Rest.ApiService;
 import com.app.nikhil.newsapp.Rest.ResponseCallback;
 import com.app.nikhil.newsapp.Rest.SQLiteDB;
-import com.app.nikhil.newsapp.UI.Activity.ArticleDetailActivity;
-import com.chootdev.recycleclick.RecycleClick;
 import com.daimajia.swipe.util.Attributes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class BusinessNewsFrament extends Fragment {
+
+public class ScienceNewsFragment extends Fragment {
 
     ApiService apiService;
 
     SQLiteDatabase sqLiteDatabase;
-    TrendingNewsAdapter businessNewsAdapter;
+    TrendingNewsAdapter scienceNewsAdapter;
 
-    RecyclerView businessNewsRv;
+    RecyclerView scienceNewsRv;
     private ArrayList<Article> savedArticlesList;
 
-    public BusinessNewsFrament() {
+    public ScienceNewsFragment() {
         // Required empty public constructor
     }
 
@@ -58,16 +53,17 @@ public class BusinessNewsFrament extends Fragment {
 
         SQLiteDB sqLiteDB=new SQLiteDB(getActivity());
         sqLiteDatabase=sqLiteDB.getWritableDatabase();
-
         savedArticlesList=new ArrayList<>();
 
         fetchSavedNewsFromDatabase();
 
-        View view= inflater.inflate(R.layout.fragment_business_news_frament, container, false);
 
-        businessNewsRv =view.findViewById(R.id.businessNewsRv);
+        View view= inflater.inflate(R.layout.fragment_science_news, container, false);
+
+        scienceNewsRv =view.findViewById(R.id.scienceNewsRv);
         return view;
     }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -75,46 +71,6 @@ public class BusinessNewsFrament extends Fragment {
 
         fetchTrendingNews();
 
-    }
-
-
-    public void fetchTrendingNews()
-    {
-        SharedPreferences mPreferences = getActivity().getSharedPreferences("NewsDB", Context.MODE_PRIVATE);
-        String countryCode=mPreferences.getString("userCountry","in");
-        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,"business","",20, new ResponseCallback<TopHeadlinesResponse>() {
-            @Override
-            public void success(TopHeadlinesResponse topHeadlinesResponse) {
-
-                List<Article> articles=topHeadlinesResponse.getArticles();
-                int totalResults=topHeadlinesResponse.getTotalResults();
-
-                if(totalResults>20)
-                {
-                    totalResults=20;
-                }
-
-                ArrayList<Article> trendingArticlesList=new ArrayList<>();
-
-                for(int i=0;i<totalResults;i++)
-                {
-                    if(checkIfArticleAlreadySaved(articles.get(i)))
-                    {
-                        articles.get(i).setIsSaved(true);
-                    }
-                    trendingArticlesList.add(articles.get(i));
-                }
-
-                populateTrendingNewsView(trendingArticlesList);
-
-
-            }
-
-            @Override
-            public void failure(TopHeadlinesResponse topHeadlinesResponse) {
-
-            }
-        });
     }
 
     public boolean checkIfArticleAlreadySaved(Article article)
@@ -158,25 +114,54 @@ public class BusinessNewsFrament extends Fragment {
     }
 
 
-
-    public void populateTrendingNewsView(final ArrayList<Article> trendingArticlesList)
+    public void fetchTrendingNews()
     {
-        businessNewsAdapter =new TrendingNewsAdapter(trendingArticlesList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        businessNewsRv.setLayoutManager(mLayoutManager);
-        businessNewsRv.setItemAnimator(new DefaultItemAnimator());
-        businessNewsRv.setAdapter(businessNewsAdapter);
-
-        RecycleClick.addTo(businessNewsRv).setOnItemClickListener(new RecycleClick.OnItemClickListener() {
+        SharedPreferences mPreferences = getActivity().getSharedPreferences("NewsDB", Context.MODE_PRIVATE);
+        String countryCode=mPreferences.getString("userCountry","in");
+        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,"science","",20, new ResponseCallback<TopHeadlinesResponse>() {
             @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+            public void success(TopHeadlinesResponse topHeadlinesResponse) {
 
-                startActivity(new Intent(getActivity(),ArticleDetailActivity.class).putExtra("article",trendingArticlesList.get(position)));
+                List<Article> articles=topHeadlinesResponse.getArticles();
+                int totalResults=topHeadlinesResponse.getTotalResults();
+
+                if(totalResults>20)
+                {
+                    totalResults=20;
+                }
+
+                ArrayList<Article> trendingArticlesList=new ArrayList<>();
+
+                for(int i=0;i<totalResults;i++)
+                {
+                    trendingArticlesList.add(articles.get(i));
+                    if(checkIfArticleAlreadySaved(articles.get(i)))
+                    {
+                        articles.get(i).setIsSaved(true);
+                    }
+                }
+
+                populateTrendingNewsView(trendingArticlesList);
+
+
+            }
+
+            @Override
+            public void failure(TopHeadlinesResponse topHeadlinesResponse) {
 
             }
         });
-
     }
 
+
+    public void populateTrendingNewsView(final ArrayList<Article> trendingArticlesList)
+    {
+        scienceNewsAdapter =new TrendingNewsAdapter(trendingArticlesList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        scienceNewsRv.setLayoutManager(mLayoutManager);
+        scienceNewsRv.setItemAnimator(new DefaultItemAnimator());
+        scienceNewsRv.setAdapter(scienceNewsAdapter);
+
+    }
 
 }

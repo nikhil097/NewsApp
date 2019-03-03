@@ -1,6 +1,8 @@
-package com.app.nikhil.newsapp.UI.Fragments;
+package com.app.nikhil.newsapp.UI.Fragments.OnlineFragments;
+
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,23 +26,28 @@ import com.app.nikhil.newsapp.Rest.ApiCredentals;
 import com.app.nikhil.newsapp.Rest.ApiService;
 import com.app.nikhil.newsapp.Rest.ResponseCallback;
 import com.app.nikhil.newsapp.Rest.SQLiteDB;
+import com.app.nikhil.newsapp.UI.Activity.ArticleDetailActivity;
+import com.chootdev.recycleclick.RecycleClick;
 import com.daimajia.swipe.util.Attributes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class TechnologyNewsFragment extends Fragment {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class HealthNewsFragment extends Fragment {
 
     ApiService apiService;
 
     SQLiteDatabase sqLiteDatabase;
-    TrendingNewsAdapter technologyNewsAdapter;
+    TrendingNewsAdapter healthNewsAdapter;
 
-    RecyclerView technologyNewsRv;
+    RecyclerView healthNewsRv;
     private ArrayList<Article> savedArticlesList;
 
-    public TechnologyNewsFragment() {
+
+    public HealthNewsFragment() {
         // Required empty public constructor
     }
 
@@ -57,9 +64,9 @@ public class TechnologyNewsFragment extends Fragment {
 
         fetchSavedNewsFromDatabase();
 
-        View view= inflater.inflate(R.layout.fragment_technology_news, container, false);
+        View view= inflater.inflate(R.layout.fragment_health_news, container, false);
 
-        technologyNewsRv =view.findViewById(R.id.technologyNewsRv);
+        healthNewsRv =view.findViewById(R.id.healthNewsRv);
         return view;
     }
 
@@ -71,6 +78,7 @@ public class TechnologyNewsFragment extends Fragment {
         fetchTrendingNews();
 
     }
+
 
     public boolean checkIfArticleAlreadySaved(Article article)
     {
@@ -117,7 +125,7 @@ public class TechnologyNewsFragment extends Fragment {
     {
         SharedPreferences mPreferences = getActivity().getSharedPreferences("NewsDB", Context.MODE_PRIVATE);
         String countryCode=mPreferences.getString("userCountry","in");
-        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,"technology","",20, new ResponseCallback<TopHeadlinesResponse>() {
+        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,"health","",20, new ResponseCallback<TopHeadlinesResponse>() {
             @Override
             public void success(TopHeadlinesResponse topHeadlinesResponse) {
 
@@ -154,14 +162,12 @@ public class TechnologyNewsFragment extends Fragment {
 
     public void populateTrendingNewsView(final ArrayList<Article> trendingArticlesList)
     {
-        technologyNewsAdapter =new TrendingNewsAdapter(trendingArticlesList);
+        healthNewsAdapter =new TrendingNewsAdapter(trendingArticlesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        technologyNewsRv.setLayoutManager(mLayoutManager);
-        technologyNewsRv.setItemAnimator(new DefaultItemAnimator());
-        technologyNewsRv.setAdapter(technologyNewsAdapter);
+        healthNewsRv.setLayoutManager(mLayoutManager);
+        healthNewsRv.setItemAnimator(new DefaultItemAnimator());
+        healthNewsRv.setAdapter(healthNewsAdapter);
 
     }
-
-
 
 }

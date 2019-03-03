@@ -13,6 +13,11 @@
         android:icon="@drawable/icons8_check_file_100"
         android:title="" />
 
+    <item
+        android:id="@+id/searchNews"
+        android:icon="@drawable/icons8_search_filled_500"
+        android:title="" />
+
 
 
 

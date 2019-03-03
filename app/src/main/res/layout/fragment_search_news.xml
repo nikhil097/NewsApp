@@ -3,12 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.Fragments.OnlineFragments.EntertainmentNewsFragment">
+    tools:context=".UI.Fragments.SearchNewsFragment">
+
+   <EditText
+       android:layout_width="match_parent"
+       android:layout_height="70dp"
+       android:layout_margin="16dp"
+       android:id="@+id/searchNewsET"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/entertainmentNewsRv">
+        android:layout_height="wrap_content"
+        android:id="@+id/resultNewsRv"
+        android:layout_below="@+id/searchNewsET">
 
     </android.support.v7.widget.RecyclerView>
+
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.app.nikhil.newsapp.UI.Fragments;
+package com.app.nikhil.newsapp.UI.Fragments.OnlineFragments;
 
 
 import android.content.Context;
@@ -36,18 +36,17 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HealthNewsFragment extends Fragment {
+public class BusinessNewsFrament extends Fragment {
 
     ApiService apiService;
 
     SQLiteDatabase sqLiteDatabase;
-    TrendingNewsAdapter healthNewsAdapter;
+    TrendingNewsAdapter businessNewsAdapter;
 
-    RecyclerView healthNewsRv;
+    RecyclerView businessNewsRv;
     private ArrayList<Article> savedArticlesList;
 
-
-    public HealthNewsFragment() {
+    public BusinessNewsFrament() {
         // Required empty public constructor
     }
 
@@ -64,12 +63,11 @@ public class HealthNewsFragment extends Fragment {
 
         fetchSavedNewsFromDatabase();
 
-        View view= inflater.inflate(R.layout.fragment_health_news, container, false);
+        View view= inflater.inflate(R.layout.fragment_business_news_frament, container, false);
 
-        healthNewsRv =view.findViewById(R.id.healthNewsRv);
+        businessNewsRv =view.findViewById(R.id.businessNewsRv);
         return view;
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -79,6 +77,45 @@ public class HealthNewsFragment extends Fragment {
 
     }
 
+
+    public void fetchTrendingNews()
+    {
+        SharedPreferences mPreferences = getActivity().getSharedPreferences("NewsDB", Context.MODE_PRIVATE);
+        String countryCode=mPreferences.getString("userCountry","in");
+        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,"business","",20, new ResponseCallback<TopHeadlinesResponse>() {
+            @Override
+            public void success(TopHeadlinesResponse topHeadlinesResponse) {
+
+                List<Article> articles=topHeadlinesResponse.getArticles();
+                int totalResults=topHeadlinesResponse.getTotalResults();
+
+                if(totalResults>20)
+                {
+                    totalResults=20;
+                }
+
+                ArrayList<Article> trendingArticlesList=new ArrayList<>();
+
+                for(int i=0;i<totalResults;i++)
+                {
+                    if(checkIfArticleAlreadySaved(articles.get(i)))
+                    {
+                        articles.get(i).setIsSaved(true);
+                    }
+                    trendingArticlesList.add(articles.get(i));
+                }
+
+                populateTrendingNewsView(trendingArticlesList);
+
+
+            }
+
+            @Override
+            public void failure(TopHeadlinesResponse topHeadlinesResponse) {
+
+            }
+        });
+    }
 
     public boolean checkIfArticleAlreadySaved(Article article)
     {
@@ -121,53 +158,25 @@ public class HealthNewsFragment extends Fragment {
     }
 
 
-    public void fetchTrendingNews()
-    {
-        SharedPreferences mPreferences = getActivity().getSharedPreferences("NewsDB", Context.MODE_PRIVATE);
-        String countryCode=mPreferences.getString("userCountry","in");
-        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,"health","",20, new ResponseCallback<TopHeadlinesResponse>() {
-            @Override
-            public void success(TopHeadlinesResponse topHeadlinesResponse) {
-
-                List<Article> articles=topHeadlinesResponse.getArticles();
-                int totalResults=topHeadlinesResponse.getTotalResults();
-                if(totalResults>20)
-                {
-                    totalResults=20;
-                }
-
-                ArrayList<Article> trendingArticlesList=new ArrayList<>();
-
-                for(int i=0;i<totalResults;i++)
-                {
-                    trendingArticlesList.add(articles.get(i));
-                    if(checkIfArticleAlreadySaved(articles.get(i)))
-                    {
-                        articles.get(i).setIsSaved(true);
-                    }
-                }
-
-                populateTrendingNewsView(trendingArticlesList);
-
-
-            }
-
-            @Override
-            public void failure(TopHeadlinesResponse topHeadlinesResponse) {
-
-            }
-        });
-    }
-
 
     public void populateTrendingNewsView(final ArrayList<Article> trendingArticlesList)
     {
-        healthNewsAdapter =new TrendingNewsAdapter(trendingArticlesList);
+        businessNewsAdapter =new TrendingNewsAdapter(trendingArticlesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        healthNewsRv.setLayoutManager(mLayoutManager);
-        healthNewsRv.setItemAnimator(new DefaultItemAnimator());
-        healthNewsRv.setAdapter(healthNewsAdapter);
+        businessNewsRv.setLayoutManager(mLayoutManager);
+        businessNewsRv.setItemAnimator(new DefaultItemAnimator());
+        businessNewsRv.setAdapter(businessNewsAdapter);
+
+        RecycleClick.addTo(businessNewsRv).setOnItemClickListener(new RecycleClick.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+                startActivity(new Intent(getActivity(),ArticleDetailActivity.class).putExtra("article",trendingArticlesList.get(position)));
+
+            }
+        });
 
     }
+
 
 }

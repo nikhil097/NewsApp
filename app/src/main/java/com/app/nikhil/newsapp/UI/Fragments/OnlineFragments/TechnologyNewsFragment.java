@@ -1,5 +1,4 @@
-package com.app.nikhil.newsapp.UI.Fragments;
-
+package com.app.nikhil.newsapp.UI.Fragments.OnlineFragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -31,17 +30,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ScienceNewsFragment extends Fragment {
+public class TechnologyNewsFragment extends Fragment {
 
     ApiService apiService;
 
     SQLiteDatabase sqLiteDatabase;
-    TrendingNewsAdapter scienceNewsAdapter;
+    TrendingNewsAdapter technologyNewsAdapter;
 
-    RecyclerView scienceNewsRv;
+    RecyclerView technologyNewsRv;
     private ArrayList<Article> savedArticlesList;
 
-    public ScienceNewsFragment() {
+    public TechnologyNewsFragment() {
         // Required empty public constructor
     }
 
@@ -53,14 +52,14 @@ public class ScienceNewsFragment extends Fragment {
 
         SQLiteDB sqLiteDB=new SQLiteDB(getActivity());
         sqLiteDatabase=sqLiteDB.getWritableDatabase();
+
         savedArticlesList=new ArrayList<>();
 
         fetchSavedNewsFromDatabase();
 
+        View view= inflater.inflate(R.layout.fragment_technology_news, container, false);
 
-        View view= inflater.inflate(R.layout.fragment_science_news, container, false);
-
-        scienceNewsRv =view.findViewById(R.id.scienceNewsRv);
+        technologyNewsRv =view.findViewById(R.id.technologyNewsRv);
         return view;
     }
 
@@ -118,13 +117,12 @@ public class ScienceNewsFragment extends Fragment {
     {
         SharedPreferences mPreferences = getActivity().getSharedPreferences("NewsDB", Context.MODE_PRIVATE);
         String countryCode=mPreferences.getString("userCountry","in");
-        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,"science","",20, new ResponseCallback<TopHeadlinesResponse>() {
+        apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,"technology","",20, new ResponseCallback<TopHeadlinesResponse>() {
             @Override
             public void success(TopHeadlinesResponse topHeadlinesResponse) {
 
                 List<Article> articles=topHeadlinesResponse.getArticles();
                 int totalResults=topHeadlinesResponse.getTotalResults();
-
                 if(totalResults>20)
                 {
                     totalResults=20;
@@ -156,12 +154,14 @@ public class ScienceNewsFragment extends Fragment {
 
     public void populateTrendingNewsView(final ArrayList<Article> trendingArticlesList)
     {
-        scienceNewsAdapter =new TrendingNewsAdapter(trendingArticlesList);
+        technologyNewsAdapter =new TrendingNewsAdapter(trendingArticlesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        scienceNewsRv.setLayoutManager(mLayoutManager);
-        scienceNewsRv.setItemAnimator(new DefaultItemAnimator());
-        scienceNewsRv.setAdapter(scienceNewsAdapter);
+        technologyNewsRv.setLayoutManager(mLayoutManager);
+        technologyNewsRv.setItemAnimator(new DefaultItemAnimator());
+        technologyNewsRv.setAdapter(technologyNewsAdapter);
 
     }
+
+
 
 }

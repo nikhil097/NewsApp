@@ -1,10 +1,8 @@
-package com.app.nikhil.newsapp.UI.Fragments;
+package com.app.nikhil.newsapp.UI.Fragments.OnlineFragments;
 
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -27,8 +25,6 @@ import com.app.nikhil.newsapp.Rest.ApiCredentals;
 import com.app.nikhil.newsapp.Rest.ApiService;
 import com.app.nikhil.newsapp.Rest.ResponseCallback;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 
 import java.util.ArrayList;
 import java.util.Collections;
