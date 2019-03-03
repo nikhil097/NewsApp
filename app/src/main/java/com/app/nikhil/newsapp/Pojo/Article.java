@@ -12,6 +12,7 @@ public class Article implements Serializable {
     String urlToImage;
     String publishedAt;
     String content;
+    boolean isSaved=false;
 
 
 
@@ -71,5 +72,11 @@ public class Article implements Serializable {
         this.content = content;
     }
 
+    public boolean getIsSaved() {
+        return isSaved;
+    }
 
+    public void setIsSaved(boolean isSaved) {
+        this.isSaved = isSaved;
+    }
 }

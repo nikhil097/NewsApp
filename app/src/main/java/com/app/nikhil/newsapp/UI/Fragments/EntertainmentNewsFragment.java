@@ -4,6 +4,7 @@ package com.app.nikhil.newsapp.UI.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +43,7 @@ public class EntertainmentNewsFragment extends Fragment {
     NewsSwipeAdapter businessNewsAdapter;
 
     RecyclerView entertainmentNewsRv;
+    private ArrayList<Article> savedArticlesList;
 
     public EntertainmentNewsFragment() {
         // Required empty public constructor
@@ -56,6 +59,9 @@ public class EntertainmentNewsFragment extends Fragment {
             SQLiteDB sqLiteDB=new SQLiteDB(getActivity());
             sqLiteDatabase=sqLiteDB.getWritableDatabase();
 
+        savedArticlesList=new ArrayList<>();
+
+        fetchSavedNewsFromDatabase();
 
 
             View view= inflater.inflate(R.layout.fragment_entertainment_news, container, false);
@@ -85,11 +91,20 @@ public class EntertainmentNewsFragment extends Fragment {
                 List<Article> articles=topHeadlinesResponse.getArticles();
                 int totalResults=topHeadlinesResponse.getTotalResults();
 
+                if(totalResults>20)
+                {
+                    totalResults=20;
+                }
+
                 ArrayList<Article> trendingArticlesList=new ArrayList<>();
 
-                for(int i=0;i<20;i++)
+                for(int i=0;i<totalResults;i++)
                 {
                     trendingArticlesList.add(articles.get(i));
+                    if(checkIfArticleAlreadySaved(articles.get(i)))
+                    {
+                        articles.get(i).setIsSaved(true);
+                    }
                 }
 
                 populateTrendingNewsView(trendingArticlesList);
@@ -103,6 +118,47 @@ public class EntertainmentNewsFragment extends Fragment {
             }
         });
     }
+
+    public boolean checkIfArticleAlreadySaved(Article article)
+    {
+        for(Article article1:savedArticlesList)
+        {
+            if(article1.getTitle().equals(article.getTitle()))
+            {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    public void fetchSavedNewsFromDatabase() {
+        SQLiteDB sqlhelper = new SQLiteDB(getActivity());
+        SQLiteDatabase sqLiteDatabase = sqlhelper.getWritableDatabase();
+
+
+        String[] columns = {"_id", SQLiteDB.TITLE, SQLiteDB.DESCRIPTION, SQLiteDB.URLTOIMAGE, SQLiteDB.CONTENT};
+        Cursor cursor = sqLiteDatabase.query("ARTICLEDETAILS", columns, null, null, null, null, null);
+
+        while (cursor.moveToNext()) {
+            int cid = cursor.getInt(0);
+            String articleTitle = cursor.getString(1);
+            String articleDescription = cursor.getString(2);
+            String articleUrlToImage = cursor.getString(3);
+            String articleContent = cursor.getString(4);
+            Log.v("activity2", cid + " " + articleTitle + " " + articleDescription);
+
+
+            Article article = new Article();
+            article.setTitle(articleTitle);
+            article.setDescription(articleDescription);
+            article.setUrlToImage(articleUrlToImage);
+            article.setContent(articleContent);
+
+            savedArticlesList.add(article);
+        }
+    }
+
 
 
     public void populateTrendingNewsView(final ArrayList<Article> trendingArticlesList)

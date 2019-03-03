@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Criteria;
@@ -58,9 +59,11 @@ public class TrendingNewsFragment extends Fragment {
     ApiService apiService;
 
     SQLiteDatabase sqLiteDatabase;
-    NewsSwipeAdapter trendingNewsAdapter;
+    TrendingNewsAdapter trendingNewsAdapter;
 
     RecyclerView trendingNewsRv;
+
+    ArrayList<Article> savedArticlesList;
 
 
     public TrendingNewsFragment() {
@@ -77,7 +80,9 @@ public class TrendingNewsFragment extends Fragment {
         SQLiteDB sqLiteDB=new SQLiteDB(getActivity());
         sqLiteDatabase=sqLiteDB.getWritableDatabase();
 
+        savedArticlesList=new ArrayList<>();
 
+        fetchSavedNewsFromDatabase();
 
         View view= inflater.inflate(R.layout.fragment_trending_news, container, false);
 
@@ -104,10 +109,20 @@ public class TrendingNewsFragment extends Fragment {
                         List<Article> articles=topHeadlinesResponse.getArticles();
                         int totalResults=topHeadlinesResponse.getTotalResults();
 
+                        if(totalResults>20)
+                        {
+                            totalResults=20;
+                        }
+
                         ArrayList<Article> trendingArticlesList=new ArrayList<>();
 
-                        for(int i=0;i<20;i++)
+                        for(int i=0;i<totalResults;i++)
                         {
+
+                            if(checkIfArticleAlreadySaved(articles.get(i)))
+                            {
+                                articles.get(i).setIsSaved(true);
+                            }
                             trendingArticlesList.add(articles.get(i));
                         }
 
@@ -123,15 +138,52 @@ public class TrendingNewsFragment extends Fragment {
         });
     }
 
+    public boolean checkIfArticleAlreadySaved(Article article)
+    {
+        for(Article article1:savedArticlesList)
+        {
+            if(article1.getTitle().equals(article.getTitle()))
+            {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    public void fetchSavedNewsFromDatabase() {
+        SQLiteDB sqlhelper = new SQLiteDB(getActivity());
+        SQLiteDatabase sqLiteDatabase = sqlhelper.getWritableDatabase();
+
+
+        String[] columns = {"_id", SQLiteDB.TITLE, SQLiteDB.DESCRIPTION, SQLiteDB.URLTOIMAGE, SQLiteDB.CONTENT};
+        Cursor cursor = sqLiteDatabase.query("ARTICLEDETAILS", columns, null, null, null, null, null);
+
+        while (cursor.moveToNext()) {
+            int cid = cursor.getInt(0);
+            String articleTitle = cursor.getString(1);
+            String articleDescription = cursor.getString(2);
+            String articleUrlToImage = cursor.getString(3);
+            String articleContent = cursor.getString(4);
+            Log.v("activity2", cid + " " + articleTitle + " " + articleDescription);
+
+
+            Article article = new Article();
+            article.setTitle(articleTitle);
+            article.setDescription(articleDescription);
+            article.setUrlToImage(articleUrlToImage);
+            article.setContent(articleContent);
+
+            savedArticlesList.add(article);
+        }
+    }
 
     public void populateTrendingNewsView(final ArrayList<Article> trendingArticlesList)
     {
-        trendingNewsAdapter=new NewsSwipeAdapter(getActivity(),trendingArticlesList);
+        trendingNewsAdapter=new TrendingNewsAdapter(trendingArticlesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         trendingNewsRv.setLayoutManager(mLayoutManager);
         trendingNewsRv.setItemAnimator(new DefaultItemAnimator());
-        trendingNewsRv.getParent().requestDisallowInterceptTouchEvent(true);
-        ((NewsSwipeAdapter) trendingNewsAdapter).setMode(Attributes.Mode.Single);
         trendingNewsRv.setAdapter(trendingNewsAdapter);
 
         RecycleClick.addTo(trendingNewsRv).setOnItemClickListener(new RecycleClick.OnItemClickListener() {

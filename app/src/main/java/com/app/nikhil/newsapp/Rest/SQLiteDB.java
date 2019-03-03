@@ -14,7 +14,7 @@ public class SQLiteDB extends SQLiteOpenHelper {
         public static String CONTENT="CONTENT";
 
         public SQLiteDB(Context context) {
-            super(context, "ARTICLEDETAILS", null, 6);
+            super(context, "ARTICLEDETAILS", null, 7);
             this.context=context;
         }
 

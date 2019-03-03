@@ -3,6 +3,7 @@ package com.app.nikhil.newsapp.UI.Fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +38,7 @@ public class ScienceNewsFragment extends Fragment {
     NewsSwipeAdapter scienceNewsAdapter;
 
     RecyclerView scienceNewsRv;
+    private ArrayList<Article> savedArticlesList;
 
     public ScienceNewsFragment() {
         // Required empty public constructor
@@ -49,7 +52,9 @@ public class ScienceNewsFragment extends Fragment {
 
         SQLiteDB sqLiteDB=new SQLiteDB(getActivity());
         sqLiteDatabase=sqLiteDB.getWritableDatabase();
+        savedArticlesList=new ArrayList<>();
 
+        fetchSavedNewsFromDatabase();
 
 
         View view= inflater.inflate(R.layout.fragment_science_news, container, false);
@@ -65,6 +70,46 @@ public class ScienceNewsFragment extends Fragment {
 
         fetchTrendingNews();
 
+    }
+
+    public boolean checkIfArticleAlreadySaved(Article article)
+    {
+        for(Article article1:savedArticlesList)
+        {
+            if(article1.getTitle().equals(article.getTitle()))
+            {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    public void fetchSavedNewsFromDatabase() {
+        SQLiteDB sqlhelper = new SQLiteDB(getActivity());
+        SQLiteDatabase sqLiteDatabase = sqlhelper.getWritableDatabase();
+
+
+        String[] columns = {"_id", SQLiteDB.TITLE, SQLiteDB.DESCRIPTION, SQLiteDB.URLTOIMAGE, SQLiteDB.CONTENT};
+        Cursor cursor = sqLiteDatabase.query("ARTICLEDETAILS", columns, null, null, null, null, null);
+
+        while (cursor.moveToNext()) {
+            int cid = cursor.getInt(0);
+            String articleTitle = cursor.getString(1);
+            String articleDescription = cursor.getString(2);
+            String articleUrlToImage = cursor.getString(3);
+            String articleContent = cursor.getString(4);
+            Log.v("activity2", cid + " " + articleTitle + " " + articleDescription);
+
+
+            Article article = new Article();
+            article.setTitle(articleTitle);
+            article.setDescription(articleDescription);
+            article.setUrlToImage(articleUrlToImage);
+            article.setContent(articleContent);
+
+            savedArticlesList.add(article);
+        }
     }
 
 
@@ -89,6 +134,10 @@ public class ScienceNewsFragment extends Fragment {
                 for(int i=0;i<totalResults;i++)
                 {
                     trendingArticlesList.add(articles.get(i));
+                    if(checkIfArticleAlreadySaved(articles.get(i)))
+                    {
+                        articles.get(i).setIsSaved(true);
+                    }
                 }
 
                 populateTrendingNewsView(trendingArticlesList);

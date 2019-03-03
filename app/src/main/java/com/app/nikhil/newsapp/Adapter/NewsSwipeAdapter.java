@@ -58,7 +58,7 @@ public class NewsSwipeAdapter extends RecyclerSwipeAdapter<NewsSwipeAdapter.Simp
     }
 
     @Override
-    public void onBindViewHolder(SimpleViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
 
             final Article article = articlesList.get(position);
 
@@ -68,6 +68,10 @@ public class NewsSwipeAdapter extends RecyclerSwipeAdapter<NewsSwipeAdapter.Simp
         Glide.with(mContext).load(article.getUrlToImage()).into(viewHolder.articleImageView);
         viewHolder.articleDescriptionTv.setText(article.getDescription());
 
+        if(article.getIsSaved())
+        {
+            viewHolder.btnSaveNews.setImageResource(R.drawable.icons8_save_close_961);
+        }
 
             // Drag From Left
             viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, viewHolder.swipeLayout.findViewById(R.id.bottom_wrapper1));
@@ -131,9 +135,14 @@ public class NewsSwipeAdapter extends RecyclerSwipeAdapter<NewsSwipeAdapter.Simp
             });
 
 
+
             viewHolder.btnSaveNews.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+
+                    viewHolder.btnSaveNews.setImageResource(0);
+                    viewHolder.btnSaveNews.setBackground(mContext.getResources().getDrawable(R.drawable.icons8_save_close_961));
 
              //       Toast.makeText(v.getContext(), "Clicked on Map ", Toast.LENGTH_SHORT).show();
                     saveNewsArticle(articlesList.get(position));
