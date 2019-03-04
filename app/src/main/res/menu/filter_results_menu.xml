@@ -6,6 +6,7 @@
     <item
         android:id="@+id/filterNews"
         android:icon="@drawable/icons8_slider_filled_100"
+        android:iconTint="@android:color/white"
         app:showAsAction="always"
         android:title=""/>
 
