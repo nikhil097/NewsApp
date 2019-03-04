@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/savedNews"
-        android:icon="@drawable/icons8_check_file_100"
+        android:icon="@drawable/icons8_tv_off_100"
         android:title="" />
 
     <item
