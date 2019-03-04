@@ -36,6 +36,8 @@
                 android:layout_weight="6"
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
+                android:maxLines="3"
+                android:ellipsize="end"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:id="@+id/savedArticleTitleTv"/>
@@ -45,7 +47,7 @@
                     android:layout_height="50dp"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-                    android:background="@drawable/icons8_slider_filled_100"
+                    android:background="@drawable/icons8_remove_480"
                     android:id="@+id/deleteNewsRecordBtn"/>
 
             </LinearLayout>

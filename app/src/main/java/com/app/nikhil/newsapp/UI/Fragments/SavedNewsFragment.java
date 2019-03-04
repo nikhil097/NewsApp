@@ -12,11 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
+
 
 import com.app.nikhil.newsapp.Adapter.SavedNewsAdapter;
-import com.app.nikhil.newsapp.Adapter.TrendingNewsAdapter;
 import com.app.nikhil.newsapp.Pojo.Article;
 import com.app.nikhil.newsapp.R;
 import com.app.nikhil.newsapp.Rest.SQLiteDB;
@@ -32,7 +31,8 @@ public class SavedNewsFragment extends Fragment {
     RecyclerView savedNewsRv;
     SavedNewsAdapter savedNewsAdapter;
 
-    Button deleteNewsRecordBtn;
+
+    TextView noNewsSavedTv;
 
     public SavedNewsFragment() {
         // Required empty public constructor
@@ -47,11 +47,14 @@ public class SavedNewsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         savedArticlesList=new ArrayList<>();
-        fetchSavedNewsFromDatabase();
 
         View view= inflater.inflate(R.layout.fragment_saved_news, container, false);
         savedNewsRv=view.findViewById(R.id.savedNewsRv);
+        noNewsSavedTv=view.findViewById(R.id.noNewsSavedTv);
         populateTrendingNewsView(savedArticlesList);
+
+        fetchSavedNewsFromDatabase();
+
 
 
 
@@ -61,7 +64,7 @@ public class SavedNewsFragment extends Fragment {
 
     public void populateTrendingNewsView(final ArrayList<Article> savedArticlesList)
     {
-        savedNewsAdapter=new SavedNewsAdapter(savedArticlesList);
+        savedNewsAdapter=new SavedNewsAdapter(savedArticlesList,getActivity());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         savedNewsRv.setLayoutManager(mLayoutManager);
         savedNewsRv.setItemAnimator(new DefaultItemAnimator());
@@ -72,13 +75,14 @@ public class SavedNewsFragment extends Fragment {
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 savedNewsAdapter.notifyDataSetChanged();
 
-
                 startActivity(new Intent(getActivity(),ArticleDetailActivity.class).putExtra("article",savedArticlesList.get(position)));
 
             }
         });
 
     }
+
+
 
 
 
@@ -110,6 +114,9 @@ public class SavedNewsFragment extends Fragment {
             article.setContent(articleContent);
 
             savedArticlesList.add(article);
+
+            noNewsSavedTv.setVisibility(View.GONE);
+
         }
 
     }

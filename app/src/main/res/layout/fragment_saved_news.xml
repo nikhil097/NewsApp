@@ -5,6 +5,18 @@
     android:layout_height="match_parent"
     tools:context=".UI.Fragments.SavedNewsFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="No news articles saved."
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:id="@+id/noNewsSavedTv"
+        android:textStyle="bold"
+        android:textSize="25sp"/>
+
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

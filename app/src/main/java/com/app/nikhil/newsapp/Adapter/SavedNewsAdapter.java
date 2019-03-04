@@ -1,6 +1,7 @@
 package com.app.nikhil.newsapp.Adapter;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
@@ -22,13 +23,13 @@ public class SavedNewsAdapter extends RecyclerView.Adapter<SavedNewsAdapter.Save
 
 
     ArrayList<Article> savedArticlesList;
-    Context context;
+    Activity context;
 
     @NonNull
     @Override
     public SavedNewsAdapter.SavedNewsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        context=viewGroup.getContext();
+
         View view=LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.saved_news_article_item,viewGroup,false);
         return new SavedNewsAdapter.SavedNewsViewHolder(view);
     }
@@ -51,7 +52,12 @@ public class SavedNewsAdapter extends RecyclerView.Adapter<SavedNewsAdapter.Save
 
     }
 
-    public void deleteRecordFromDataBase(String key,String value,int position)
+    public SavedNewsAdapter(ArrayList<Article> savedArticlesList, Activity context) {
+        this.savedArticlesList = savedArticlesList;
+        this.context = context;
+    }
+
+    public void deleteRecordFromDataBase(String key, String value, int position)
     {
         SQLiteDB sqlHelper=new SQLiteDB(context);
         SQLiteDatabase sqLiteDatabase=sqlHelper.getWritableDatabase();
@@ -59,8 +65,15 @@ public class SavedNewsAdapter extends RecyclerView.Adapter<SavedNewsAdapter.Save
 
         sqLiteDatabase.delete("ARTICLEDETAILS",key+"=?",new String[]{value});
 
+        TextView noNewsItemTv=context.findViewById(R.id.noNewsSavedTv);
+
+
+
         savedArticlesList.remove(position);
         notifyDataSetChanged();
+
+        if(savedArticlesList.isEmpty())
+            noNewsItemTv.setVisibility(View.VISIBLE);
 
     }
 
