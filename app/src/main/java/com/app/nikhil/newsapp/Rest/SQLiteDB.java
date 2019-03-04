@@ -22,7 +22,7 @@ public class SQLiteDB extends SQLiteOpenHelper {
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
             try {
-                sqLiteDatabase.execSQL("CREATE TABLE ARTICLEDETAILS (_ID INTEGER PRIMARY KEY AUTOINCREMENT,"+TITLE+ " VARCHAR(255),"+DESCRIPTION +" VARCHAR(255),"+URLTOIMAGE +" VARCHAR(255),"+CONTENT+" VARCHAR(255));");
+                sqLiteDatabase.execSQL("CREATE TABLE ARTICLEDETAILS (_ID INTEGER PRIMARY KEY AUTOINCREMENT,"+TITLE+ " VARCHAR(250),"+DESCRIPTION +" VARCHAR(255),"+URLTOIMAGE +" VARCHAR(255),"+CONTENT+" VARCHAR(255));");
 
             }
             catch(SQLException e)

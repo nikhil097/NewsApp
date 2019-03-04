@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.app.nikhil.newsapp.Adapter.SavedNewsAdapter;
 import com.app.nikhil.newsapp.Adapter.TrendingNewsAdapter;
@@ -29,6 +31,8 @@ public class SavedNewsFragment extends Fragment {
     ArrayList<Article> savedArticlesList;
     RecyclerView savedNewsRv;
     SavedNewsAdapter savedNewsAdapter;
+
+    Button deleteNewsRecordBtn;
 
     public SavedNewsFragment() {
         // Required empty public constructor
@@ -48,6 +52,9 @@ public class SavedNewsFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_saved_news, container, false);
         savedNewsRv=view.findViewById(R.id.savedNewsRv);
         populateTrendingNewsView(savedArticlesList);
+
+
+
         return  view;
     }
 
@@ -63,6 +70,8 @@ public class SavedNewsFragment extends Fragment {
         RecycleClick.addTo(savedNewsRv).setOnItemClickListener(new RecycleClick.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                savedNewsAdapter.notifyDataSetChanged();
+
 
                 startActivity(new Intent(getActivity(),ArticleDetailActivity.class).putExtra("article",savedArticlesList.get(position)));
 
@@ -70,6 +79,9 @@ public class SavedNewsFragment extends Fragment {
         });
 
     }
+
+
+
 
 
     public void fetchSavedNewsFromDatabase()
