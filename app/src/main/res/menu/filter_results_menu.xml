@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/filterNews"
-        android:icon="@drawable/icons8_user_100"
+        android:icon="@drawable/icons8_slider_filled_100"
         app:showAsAction="always"
         android:title=""/>
 

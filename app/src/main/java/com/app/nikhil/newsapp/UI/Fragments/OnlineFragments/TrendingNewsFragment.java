@@ -42,6 +42,7 @@ import com.app.nikhil.newsapp.Rest.SQLiteDB;
 import com.app.nikhil.newsapp.UI.Activity.ArticleDetailActivity;
 import com.chootdev.recycleclick.RecycleClick;
 import com.daimajia.swipe.util.Attributes;
+import com.victor.loading.rotate.RotateLoading;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,6 +63,8 @@ public class TrendingNewsFragment extends Fragment {
     TrendingNewsAdapter trendingNewsAdapter;
 
     RecyclerView trendingNewsRv;
+
+    RotateLoading trendingFragmentLoadingProgress;
 
     ArrayList<Article> savedArticlesList;
 
@@ -102,6 +105,9 @@ public class TrendingNewsFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_trending_news, container, false);
 
         trendingNewsRv=view.findViewById(R.id.trendingNewsRv);
+        trendingFragmentLoadingProgress=view.findViewById(R.id.trendingFragmentProgress);
+        trendingFragmentLoadingProgress.setLoadingColor(getResources().getColor(android.R.color.holo_blue_dark));
+        trendingFragmentLoadingProgress.start();
         return view;
     }
 
@@ -143,6 +149,8 @@ public class TrendingNewsFragment extends Fragment {
                         }
 
                         populateTrendingNewsView(trendingArticlesList);
+
+                        trendingFragmentLoadingProgress.stop();
 
 
             }

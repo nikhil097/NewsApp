@@ -1,12 +1,10 @@
 package com.app.nikhil.newsapp.UI.Fragments;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -25,12 +23,10 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.app.nikhil.newsapp.Adapter.SourcesAdapter;
 import com.app.nikhil.newsapp.Adapter.TrendingNewsAdapter;
-import com.app.nikhil.newsapp.NewsRequestBody.SearchNewsRequestBody;
 import com.app.nikhil.newsapp.NewsResponseBody.SearchNewsResponseBody;
 import com.app.nikhil.newsapp.NewsResponseBody.SourcesResponse;
 import com.app.nikhil.newsapp.Pojo.Article;
@@ -42,9 +38,9 @@ import com.app.nikhil.newsapp.Rest.ResponseCallback;
 import com.app.nikhil.newsapp.Rest.SQLiteDB;
 import com.app.nikhil.newsapp.UI.Activity.ArticleDetailActivity;
 import com.chootdev.recycleclick.RecycleClick;
+import com.victor.loading.rotate.RotateLoading;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class SearchNewsFragment extends Fragment {
@@ -52,10 +48,14 @@ public class SearchNewsFragment extends Fragment {
     EditText searchNewsEt;
     ApiService apiService;
 
+    MenuItem filterOption;
+
     RecyclerView searchNewsRv;
     TrendingNewsAdapter searchNewsAdapter;
 
     String sourcesSelectedString="";
+
+    RotateLoading searchFragmentLoadingProgress;
 
     ArrayList<NewsSource> sources;
     Spinner sortBySpinner;
@@ -71,7 +71,9 @@ public class SearchNewsFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.online_news_navigation_fragments,menu);
+        getActivity().getMenuInflater().inflate(R.menu.filter_results_menu,menu);
+        filterOption=menu.findItem(R.id.filterNews);
+        filterOption.setVisible(false);
 
     }
 
@@ -81,6 +83,10 @@ public class SearchNewsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_search_news, container, false);
         apiService=new ApiService();
+
+        searchFragmentLoadingProgress=view.findViewById(R.id.loadingProgressSearch);
+        searchFragmentLoadingProgress.setLoadingColor(getResources().getColor(android.R.color.holo_blue_dark));
+        searchFragmentLoadingProgress.start();
 
         setHasOptionsMenu(true);
         fetchSources();
@@ -131,6 +137,8 @@ public class SearchNewsFragment extends Fragment {
                 {
                     totalResults=20;
                 }
+
+                filterOption.setVisible(true);
 
                 ArrayList<Article> trendingArticlesList=new ArrayList<>();
 
@@ -261,6 +269,8 @@ public class SearchNewsFragment extends Fragment {
             public void success(SourcesResponse sourcesResponse) {
 
                 sources= (ArrayList<NewsSource>) sourcesResponse.getSources();
+
+                searchFragmentLoadingProgress.stop();
 
             }
 
