@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.nikhil.newsapp.Pojo.Article;
 import com.app.nikhil.newsapp.R;
@@ -52,11 +53,19 @@ public class TrendingNewsAdapter extends RecyclerView.Adapter<TrendingNewsAdapte
             @Override
             public void onClick(View v) {
 
-                saveNewsArticle(trendingArticlesList.get(finalI));
-                trendingNewsViewHolder.saveNewsOffline.setBackground(context.getResources().getDrawable(R.drawable.icons8_bookmark_filled_500));
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    trendingNewsViewHolder.saveNewsOffline.getBackground().setTint(context.getResources().getColor(android.R.color.holo_blue_dark));
+                if(!trendingArticlesList.get(finalI).getIsSaved()) {
+                    saveNewsArticle(trendingArticlesList.get(finalI));
+
+                    trendingNewsViewHolder.saveNewsOffline.setBackground(context.getResources().getDrawable(R.drawable.icons8_bookmark_filled_500));
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        trendingNewsViewHolder.saveNewsOffline.getBackground().setTint(context.getResources().getColor(android.R.color.holo_blue_dark));
+                    }
+                    trendingArticlesList.get(finalI).setIsSaved(true);
+                }
+                else{
+                    Toast.makeText(context,"Already saved to offline.",Toast.LENGTH_SHORT).show();
                 }
             }
         });
