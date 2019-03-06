@@ -3,6 +3,8 @@ package com.app.nikhil.newsapp.UI.Activity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.app.nikhil.newsapp.R;
+import com.app.nikhil.newsapp.UI.Fragments.OflineWarningFragment;
 import com.app.nikhil.newsapp.UI.Fragments.OnlineFragments.OnlineNewsFragment;
 import com.app.nikhil.newsapp.UI.Fragments.SavedNewsFragment;
 import com.app.nikhil.newsapp.UI.Fragments.SearchNewsFragment;
@@ -50,15 +53,24 @@ public class MainActivity extends AppCompatActivity{
 
                 if(menuItem.getItemId()==R.id.onlineNews)
                 {
-                    loadFragment(new OnlineNewsFragment());
+                    if(checkInternetConnection()) {
+                        loadFragment(new OnlineNewsFragment());
+                    }
+                    else {
+                        loadFragment(new OflineWarningFragment());
+                    }
                 }
                 else if(menuItem.getItemId()==R.id.savedNews)
                 {
                     loadFragment(new SavedNewsFragment());
                 }
                 else if(menuItem.getItemId()==R.id.searchNews){
-                    loadFragment(new SearchNewsFragment());
-
+                    if(checkInternetConnection()) {
+                        loadFragment(new SearchNewsFragment());
+                    }
+                    else {
+                        loadFragment(new OflineWarningFragment());
+                    }
                 }
 
 
@@ -66,12 +78,28 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        loadFragment(new OnlineNewsFragment());
-
+        if (checkInternetConnection()) {
+            loadFragment(new OnlineNewsFragment());
+        }
+        else {
+            loadFragment(new OflineWarningFragment());
+        }
 
 
     }
 
+
+    public boolean checkInternetConnection()
+    {
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            return true;
+        }
+        else
+            return false;
+    }
 
     public boolean checkFirstTimeLaunch()
     {
@@ -107,8 +135,8 @@ public class MainActivity extends AppCompatActivity{
     private void loadFragment(Fragment fragment) {
         // load fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.disallowAddToBackStack();
         transaction.replace(R.id.bottomNavigationFragmentContainer, fragment);
-        transaction.addToBackStack(null);
         transaction.commit();
     }
 

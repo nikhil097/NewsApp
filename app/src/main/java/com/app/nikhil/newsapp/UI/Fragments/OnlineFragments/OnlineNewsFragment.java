@@ -25,6 +25,7 @@ import com.app.nikhil.newsapp.Rest.ApiCredentals;
 import com.app.nikhil.newsapp.Rest.ApiService;
 import com.app.nikhil.newsapp.Rest.ResponseCallback;
 import com.bumptech.glide.Glide;
+import com.victor.loading.rotate.RotateLoading;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +42,9 @@ public class OnlineNewsFragment extends Fragment {
     ArrayList<String> tabImageUrls;
     ApiService apiService;
     ArrayList<Tab> tabsList;
+
+    RotateLoading fectNewsProgress;
+
 
     int counter=0;
     String ImagesUrl=null;
@@ -59,9 +63,14 @@ public class OnlineNewsFragment extends Fragment {
         newsCategoryTabs=view.findViewById(R.id.newsCategoryTabs);
         tabTitles=new ArrayList<>();
         tabImageUrls=new ArrayList<>();
+        newsCategoryTabs.setSelectedTabIndicator(getResources().getDrawable(android.R.color.holo_blue_dark));
         newsCategoryTabs.setupWithViewPager(homeViewPager);
 
         apiService=new ApiService();
+
+        fectNewsProgress=view.findViewById(R.id.fetchNewsDataProgress);
+        fectNewsProgress.setLoadingColor(getResources().getColor(R.color.colorPrimary));
+        fectNewsProgress.start();
 
         populateTabsList();
 
@@ -122,6 +131,8 @@ public class OnlineNewsFragment extends Fragment {
     {
         setupViewPager(homeViewPager);
 
+        fectNewsProgress.stop();
+
         Collections.sort(tabsList);
         for(Tab tab:tabsList)
         {
@@ -131,6 +142,7 @@ public class OnlineNewsFragment extends Fragment {
             final TabLayout.Tab customTab = newsCategoryTabs.getTabAt(i);
 
             customTab.setCustomView(R.layout.custom_category_news_tab);
+
         //    customTab.getCustomView().findViewById(R.id.customTabBackgroundImage).setBackground();
             TextView tabTitle = customTab.getCustomView().findViewById(R.id.customTabCategoryTv);
             tabTitle.setText(tabsList.get(i).getCategoryName());

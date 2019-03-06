@@ -1,13 +1,8 @@
 package com.app.nikhil.newsapp.Rest;
 
-import android.util.Log;
-
-import com.app.nikhil.newsapp.NewsRequestBody.SearchNewsRequestBody;
 import com.app.nikhil.newsapp.NewsResponseBody.SearchNewsResponseBody;
 import com.app.nikhil.newsapp.NewsResponseBody.SourcesResponse;
 import com.app.nikhil.newsapp.NewsResponseBody.TopHeadlinesResponse;
-
-import java.io.IOException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

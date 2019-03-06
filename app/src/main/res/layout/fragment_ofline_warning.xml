@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.Fragments.OflineWarningFragment">
+
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_above="@+id/offlineTv"
+        android:layout_centerInParent="true"
+        android:src="@drawable/icons8_offline_100"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="You are offline"
+        android:layout_margin="16dp"
+        android:id="@+id/offlineTv"
+        android:layout_centerInParent="true"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textSize="22dp"/>
+
+</RelativeLayout>

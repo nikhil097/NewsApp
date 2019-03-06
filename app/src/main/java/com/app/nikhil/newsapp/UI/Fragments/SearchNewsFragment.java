@@ -82,9 +82,12 @@ public class SearchNewsFragment extends Fragment {
         searchFragmentLoadingProgress.setLoadingColor(getResources().getColor(android.R.color.holo_blue_dark));
         searchFragmentLoadingProgress.start();
 
+
         fetchSources();
 
         searchNewsEt=view.findViewById(R.id.searchNewsET);
+        searchNewsEt.setEnabled(false);
+
         searchNewsRv=view.findViewById(R.id.resultNewsRv);
 
         searchNewsFilterBtn=view.findViewById(R.id.filterNewsBtn);
@@ -258,6 +261,8 @@ public class SearchNewsFragment extends Fragment {
             public void success(SourcesResponse sourcesResponse) {
 
                 sources= (ArrayList<NewsSource>) sourcesResponse.getSources();
+
+                searchNewsEt.setEnabled(true);
 
                 searchFragmentLoadingProgress.stop();
 
