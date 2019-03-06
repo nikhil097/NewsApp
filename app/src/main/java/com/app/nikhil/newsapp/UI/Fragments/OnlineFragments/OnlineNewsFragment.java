@@ -59,10 +59,11 @@ public class OnlineNewsFragment extends Fragment {
         newsCategoryTabs=view.findViewById(R.id.newsCategoryTabs);
         tabTitles=new ArrayList<>();
         tabImageUrls=new ArrayList<>();
-        setupViewPager(homeViewPager);
         newsCategoryTabs.setupWithViewPager(homeViewPager);
 
         apiService=new ApiService();
+
+        populateTabsList();
 
         fetchUrlCustomTabBackgroundImage();
 
@@ -119,6 +120,8 @@ public class OnlineNewsFragment extends Fragment {
     }
     public void setUpCustomCategoryTabs()
     {
+        setupViewPager(homeViewPager);
+
         Collections.sort(tabsList);
         for(Tab tab:tabsList)
         {
@@ -150,24 +153,29 @@ public class OnlineNewsFragment extends Fragment {
         }
     }
 
+    public void populateTabsList()
+    {
+        tabTitles.add("Trending");
+        tabTitles.add("Business");
+        tabTitles.add("Entertainment");
+        tabTitles.add("General");
+        tabTitles.add("Health");
+        tabTitles.add("Science");
+        tabTitles.add("Sports");
+        tabTitles.add("Technology");
+
+    }
+
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(TrendingNewsFragment.newInstance(""), "Trending");
-        tabTitles.add("Trending");
         adapter.addFragment(TrendingNewsFragment.newInstance("Business"),"Business");
-        tabTitles.add("Business");
         adapter.addFragment(TrendingNewsFragment.newInstance("Entertainment"),"Entertainment");
-        tabTitles.add("Entertainment");
         adapter.addFragment(TrendingNewsFragment.newInstance("General"),"General");
-        tabTitles.add("General");
         adapter.addFragment(TrendingNewsFragment.newInstance("Health"),"Health");
-        tabTitles.add("Health");
         adapter.addFragment(TrendingNewsFragment.newInstance("Science"),"Science");
-        tabTitles.add("Science");
         adapter.addFragment(TrendingNewsFragment.newInstance("Sports"),"Sports");
-        tabTitles.add("Sports");
         adapter.addFragment(TrendingNewsFragment.newInstance("Technology"),"Technology");
-        tabTitles.add("Technology");
         viewPager.setAdapter(adapter);
         viewPager.setPageTransformer(true, new RotateUpTransformer());
     }

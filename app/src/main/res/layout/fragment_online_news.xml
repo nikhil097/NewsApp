@@ -12,6 +12,7 @@
         android:layout_margin="8dp"
         app:tabPaddingStart="4dp"
         app:tabPaddingEnd="0dp"
+
         app:tabMode="scrollable"
         android:id="@+id/newsCategoryTabs">
 

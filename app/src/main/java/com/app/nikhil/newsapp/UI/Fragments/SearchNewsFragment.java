@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -48,7 +49,6 @@ public class SearchNewsFragment extends Fragment {
     EditText searchNewsEt;
     ApiService apiService;
 
-    MenuItem filterOption;
 
     RecyclerView searchNewsRv;
     TrendingNewsAdapter searchNewsAdapter;
@@ -56,6 +56,8 @@ public class SearchNewsFragment extends Fragment {
     String sourcesSelectedString="";
 
     RotateLoading searchFragmentLoadingProgress;
+
+    Button searchNewsFilterBtn;
 
     ArrayList<NewsSource> sources;
     Spinner sortBySpinner;
@@ -70,14 +72,6 @@ public class SearchNewsFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.filter_results_menu,menu);
-        filterOption=menu.findItem(R.id.filterNews);
-        filterOption.setVisible(false);
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -88,11 +82,12 @@ public class SearchNewsFragment extends Fragment {
         searchFragmentLoadingProgress.setLoadingColor(getResources().getColor(android.R.color.holo_blue_dark));
         searchFragmentLoadingProgress.start();
 
-        setHasOptionsMenu(true);
         fetchSources();
 
         searchNewsEt=view.findViewById(R.id.searchNewsET);
         searchNewsRv=view.findViewById(R.id.resultNewsRv);
+
+        searchNewsFilterBtn=view.findViewById(R.id.filterNewsBtn);
 
         savedArticlesList=new ArrayList<>();
         fetchSavedNewsFromDatabase();
@@ -113,6 +108,13 @@ public class SearchNewsFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+
+        searchNewsFilterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayFilterAlertDialog(sources);
             }
         });
 
@@ -138,7 +140,7 @@ public class SearchNewsFragment extends Fragment {
                     totalResults=20;
                 }
 
-                filterOption.setVisible(true);
+                searchNewsFilterBtn.setVisibility(View.VISIBLE);
 
                 ArrayList<Article> trendingArticlesList=new ArrayList<>();
 
@@ -163,20 +165,7 @@ public class SearchNewsFragment extends Fragment {
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id=item.getItemId();
-        if(id==R.id.filterNews)
-        {
 
-            displayFilterAlertDialog(sources);
-
-            return true;
-
-        }
-
-        return false;
-    }
 
 
     public void displayFilterAlertDialog(final ArrayList<NewsSource> sources)

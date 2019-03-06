@@ -11,6 +11,10 @@
         android:layout_centerInParent="true"
         android:id="@+id/loadingProgressSearch"/>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchNewsETContainer">
 
    <EditText
        android:layout_width="match_parent"
@@ -21,11 +25,23 @@
        android:hint="Search News"
        android:id="@+id/searchNewsET"/>
 
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/filterNewsBtn"
+            android:layout_margin="16dp"
+            android:visibility="gone"
+            android:padding="8dp"
+            android:background="@drawable/icons8_slider_filled_100"
+            android:layout_alignEnd="@id/searchNewsET"/>
+
+    </RelativeLayout>
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/resultNewsRv"
-        android:layout_below="@+id/searchNewsET">
+        android:layout_below="@+id/searchNewsETContainer">
 
     </android.support.v7.widget.RecyclerView>
 
