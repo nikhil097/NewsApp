@@ -13,6 +13,8 @@ public class NewsFirebaseInstanceInstanceService extends FirebaseInstanceIdServi
         //For registration of token
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 
+
+
         //To displaying token on logcat
         Log.d("TOKEN: ", refreshedToken);
 

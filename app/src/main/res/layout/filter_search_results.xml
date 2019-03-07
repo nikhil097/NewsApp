@@ -34,10 +34,19 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
         android:text="Sources"
         android:textStyle="bold"
         android:textSize="17sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="**Leave all choices unchecked to show results from all sources"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
