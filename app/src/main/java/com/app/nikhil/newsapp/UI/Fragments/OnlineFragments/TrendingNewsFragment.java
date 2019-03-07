@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,6 +45,8 @@ public class TrendingNewsFragment extends Fragment {
     TrendingNewsAdapter trendingNewsAdapter;
 
     RecyclerView trendingNewsRv;
+
+    SwipeRefreshLayout newsRefreshLayout;
 
     RotateLoading trendingFragmentLoadingProgress;
 
@@ -89,6 +92,17 @@ public class TrendingNewsFragment extends Fragment {
         trendingFragmentLoadingProgress=view.findViewById(R.id.trendingFragmentProgress);
         trendingFragmentLoadingProgress.setLoadingColor(getResources().getColor(android.R.color.holo_blue_dark));
         trendingFragmentLoadingProgress.start();
+
+        newsRefreshLayout=view.findViewById(R.id.newsRefreshLayout);
+        newsRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                fetchTrendingNews();
+
+            }
+        });
+
         return view;
     }
 
@@ -108,6 +122,7 @@ public class TrendingNewsFragment extends Fragment {
         apiService.getTopHeadlines(ApiCredentals.API_KEY, countryCode,getTitle(),"",20, new ResponseCallback<TopHeadlinesResponse>() {
                     @Override
                     public void success(TopHeadlinesResponse topHeadlinesResponse) {
+                        newsRefreshLayout.setRefreshing(false);
 
                         List<Article> articles=topHeadlinesResponse.getArticles();
                         int totalResults=topHeadlinesResponse.getTotalResults();

@@ -43,6 +43,8 @@ public class OnlineNewsFragment extends Fragment {
     ApiService apiService;
     ArrayList<Tab> tabsList;
 
+    FragmentManager childFragmentManager;
+
     RotateLoading fectNewsProgress;
 
 
@@ -67,6 +69,8 @@ public class OnlineNewsFragment extends Fragment {
         newsCategoryTabs.setupWithViewPager(homeViewPager);
 
         apiService=new ApiService();
+
+        childFragmentManager=getChildFragmentManager();
 
         fectNewsProgress=view.findViewById(R.id.fetchNewsDataProgress);
         fectNewsProgress.setLoadingColor(getResources().getColor(R.color.colorPrimary));
@@ -147,21 +151,14 @@ public class OnlineNewsFragment extends Fragment {
             TextView tabTitle = customTab.getCustomView().findViewById(R.id.customTabCategoryTv);
             tabTitle.setText(tabsList.get(i).getCategoryName());
             ImageView tabView=customTab.getCustomView().findViewById(R.id.customTabBackgroundImage);
-           Glide.with(getActivity()).load(tabsList.get(i).getUrlToFirstPostImage()).into(tabView);
 
+            if(isAdded()) {
+                Glide.with(getActivity()).load(tabsList.get(i).getUrlToFirstPostImage()).into(tabView);
+            }
           //  customTab.setIcon(getResources().getDrawable(R.drawable.ic_launcher_background));
 
 
-          /*  Glide.with(this)
-                    .asBitmap()
-                    .load(tabsList.get(i).getUrlToFirstPostImage())
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            customTab.getCustomView().setBackground(new BitmapDrawable(getResources(),resource));
 
-                        }
-                    });*/
         }
     }
 
@@ -179,7 +176,7 @@ public class OnlineNewsFragment extends Fragment {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(childFragmentManager);
         adapter.addFragment(TrendingNewsFragment.newInstance(""), "Trending");
         adapter.addFragment(TrendingNewsFragment.newInstance("Business"),"Business");
         adapter.addFragment(TrendingNewsFragment.newInstance("Entertainment"),"Entertainment");
