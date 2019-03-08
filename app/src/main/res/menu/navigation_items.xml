@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/onlineNews"
-        android:icon="@drawable/icons8_user_100"
+        android:icon="@drawable/home_menu_item"
         android:title=""/>
 
     <item
@@ -15,7 +15,7 @@
 
     <item
         android:id="@+id/searchNews"
-        android:icon="@drawable/icons8_search_filled_500"
+        android:icon="@drawable/search_menu_item"
         android:title="" />
 
 

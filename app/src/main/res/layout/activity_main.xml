@@ -19,7 +19,7 @@
         android:layout_gravity="bottom"
         app:labelVisibilityMode="unlabeled"
         android:background="@android:color/white"
-        app:itemIconTint="@color/colorPrimaryDark"
+        app:itemIconTint="#000000"
         android:id="@+id/appBottomNavigationTabs"
         app:menu="@menu/navigation_items">
 

@@ -67,10 +67,20 @@ public class MainActivity extends AppCompatActivity{
                     else {
                         loadFragment(new OflineWarningFragment());
                     }
+                    menuItem.setIcon(R.drawable.home_menu_item);
+                    MenuItem item=appBottomNavigationTabs.getMenu().findItem(R.id.savedNews);
+                    item.setIcon(R.drawable.icons8_tv_off_100);
+                    MenuItem item1=appBottomNavigationTabs.getMenu().findItem(R.id.searchNews);
+                    item1.setIcon(R.drawable.search_menu_item);
                 }
                 else if(menuItem.getItemId()==R.id.savedNews)
                 {
                     loadFragment(new SavedNewsFragment());
+                    menuItem.setIcon(R.drawable.offline_news_menu);
+                    MenuItem item=appBottomNavigationTabs.getMenu().findItem(R.id.onlineNews);
+                    item.setIcon(R.drawable.home_menu_item1);
+                    MenuItem item1=appBottomNavigationTabs.getMenu().findItem(R.id.searchNews);
+                    item1.setIcon(R.drawable.search_menu_item);
                 }
                 else if(menuItem.getItemId()==R.id.searchNews){
                     if(checkInternetConnection()) {
@@ -79,6 +89,11 @@ public class MainActivity extends AppCompatActivity{
                     else {
                         loadFragment(new OflineWarningFragment());
                     }
+                    menuItem.setIcon(R.drawable.search_menu_item1);
+                    MenuItem item=appBottomNavigationTabs.getMenu().findItem(R.id.onlineNews);
+                    item.setIcon(R.drawable.home_menu_item1);
+                    MenuItem item1=appBottomNavigationTabs.getMenu().findItem(R.id.savedNews);
+                    item1.setIcon(R.drawable.icons8_tv_off_100);
                 }
 
 
