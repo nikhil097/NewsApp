@@ -104,7 +104,7 @@ public class SearchNewsFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if (s.toString().length() > 3) {
+                if (s.toString().length() > 2) {
                    fetchResults("","");
                 }
             }

@@ -74,7 +74,7 @@ public class OnlineNewsFragment extends Fragment {
         childFragmentManager=getChildFragmentManager();
 
         fectNewsProgress=view.findViewById(R.id.fetchNewsDataProgress);
-        fectNewsProgress.setLoadingColor(getResources().getColor(R.color.colorPrimary));
+        fectNewsProgress.setLoadingColor(getResources().getColor(android.R.color.holo_red_light));
         fectNewsProgress.start();
 
         populateTabsList();

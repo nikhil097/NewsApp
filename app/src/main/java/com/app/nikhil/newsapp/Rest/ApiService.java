@@ -63,6 +63,7 @@ public class ApiService {
             @Override
             public void onFailure(Call<TopHeadlinesResponse> call, Throwable t) {
 
+                callback.failure(new TopHeadlinesResponse());
 
             }
         });

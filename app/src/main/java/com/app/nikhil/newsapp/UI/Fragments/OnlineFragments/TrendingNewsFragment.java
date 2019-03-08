@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.app.nikhil.newsapp.Adapter.TrendingNewsAdapter;
 import com.app.nikhil.newsapp.NewsResponseBody.TopHeadlinesResponse;
@@ -90,7 +91,7 @@ public class TrendingNewsFragment extends Fragment {
 
         trendingNewsRv=view.findViewById(R.id.trendingNewsRv);
         trendingFragmentLoadingProgress=view.findViewById(R.id.trendingFragmentProgress);
-        trendingFragmentLoadingProgress.setLoadingColor(getResources().getColor(android.R.color.holo_blue_dark));
+        trendingFragmentLoadingProgress.setLoadingColor(getResources().getColor(android.R.color.holo_red_light));
         trendingFragmentLoadingProgress.start();
 
         newsRefreshLayout=view.findViewById(R.id.newsRefreshLayout);
@@ -154,6 +155,8 @@ public class TrendingNewsFragment extends Fragment {
             @Override
             public void failure(TopHeadlinesResponse topHeadlinesResponse) {
 
+                Toast.makeText(getActivity(), "Quota for request calls to newsapi.org exceeded.", Toast.LENGTH_SHORT).show();
+
             }
         });
     }
@@ -178,6 +181,7 @@ public class TrendingNewsFragment extends Fragment {
 
         String[] columns = {"_id", SQLiteDB.TITLE, SQLiteDB.DESCRIPTION, SQLiteDB.URLTOIMAGE, SQLiteDB.CONTENT};
         Cursor cursor = sqLiteDatabase.query("ARTICLEDETAILS", columns, null, null, null, null, null);
+
 
         while (cursor.moveToNext()) {
             int cid = cursor.getInt(0);

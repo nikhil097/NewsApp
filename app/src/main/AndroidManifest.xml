@@ -27,21 +27,12 @@
         </activity>
         <activity android:name=".UI.Activity.ArticleDetailActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".UI.Fragments.SplashScreen">
-
-
-        </activity>
 
         <service
             android:name=".Notifications.NewsFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
 
-            </intent-filter>
-        </service>
-        <service android:name=".Notifications.NewsFirebaseInstanceInstanceService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
