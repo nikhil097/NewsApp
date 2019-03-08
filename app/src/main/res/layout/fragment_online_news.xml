@@ -20,7 +20,7 @@
         android:layout_margin="8dp"
         app:tabPaddingStart="4dp"
         app:tabPaddingEnd="0dp"
-
+        app:tabIndicatorColor="#000000"
         app:tabMode="scrollable"
         android:id="@+id/newsCategoryTabs">
 

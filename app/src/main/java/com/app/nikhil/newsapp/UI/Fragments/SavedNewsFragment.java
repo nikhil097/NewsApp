@@ -66,9 +66,12 @@ public class SavedNewsFragment extends Fragment {
     {
         savedNewsAdapter=new SavedNewsAdapter(savedArticlesList,getActivity());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        ((LinearLayoutManager) mLayoutManager).setStackFromEnd(true);
+        ((LinearLayoutManager) mLayoutManager).setReverseLayout(true);
         savedNewsRv.setLayoutManager(mLayoutManager);
         savedNewsRv.setItemAnimator(new DefaultItemAnimator());
         savedNewsRv.setAdapter(savedNewsAdapter);
+
 
         RecycleClick.addTo(savedNewsRv).setOnItemClickListener(new RecycleClick.OnItemClickListener() {
             @Override

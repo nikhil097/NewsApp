@@ -65,8 +65,9 @@ public class OnlineNewsFragment extends Fragment {
         newsCategoryTabs=view.findViewById(R.id.newsCategoryTabs);
         tabTitles=new ArrayList<>();
         tabImageUrls=new ArrayList<>();
-        newsCategoryTabs.setSelectedTabIndicator(getResources().getDrawable(android.R.color.holo_blue_dark));
+      //  newsCategoryTabs.setSelectedTabIndicator(getResources().getDrawable(android.R.color.holo_blue_dark));
         newsCategoryTabs.setupWithViewPager(homeViewPager);
+
 
         apiService=new ApiService();
 
@@ -146,6 +147,7 @@ public class OnlineNewsFragment extends Fragment {
             final TabLayout.Tab customTab = newsCategoryTabs.getTabAt(i);
 
             customTab.setCustomView(R.layout.custom_category_news_tab);
+            
 
         //    customTab.getCustomView().findViewById(R.id.customTabBackgroundImage).setBackground();
             TextView tabTitle = customTab.getCustomView().findViewById(R.id.customTabCategoryTv);

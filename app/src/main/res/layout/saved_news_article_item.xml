@@ -33,7 +33,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="8dp"
-                android:layout_weight="6"
+                android:layout_weight="7"
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
                 android:maxLines="3"
@@ -44,7 +44,7 @@
 
                 <Button
                     android:layout_width="0dp"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:background="@drawable/icons8_remove_480"

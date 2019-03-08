@@ -2,7 +2,9 @@ package com.app.nikhil.newsapp.Adapter;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -45,7 +47,23 @@ public class SavedNewsAdapter extends RecyclerView.Adapter<SavedNewsAdapter.Save
             @Override
             public void onClick(View v) {
 
-                deleteRecordFromDataBase("TITLE",savedArticlesList.get(i).getTitle(),i);
+                AlertDialog.Builder alertDialog=new AlertDialog.Builder(context);
+                alertDialog.setTitle("Confirm delete?");
+                alertDialog.setMessage("Are you sure you want to delete this record?");
+                alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteRecordFromDataBase("TITLE",savedArticlesList.get(i).getTitle(),i);
+
+                    }
+                });
+                alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                alertDialog.show();
 
             }
         });

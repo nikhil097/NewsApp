@@ -58,7 +58,7 @@ public class NewsFirebaseMessagingService extends FirebaseMessagingService {
         Log.v("isnotification","receivied"+" "+title);
 
         NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
-        manager.notify(/*notification id*/0, notification);
+        manager.notify(/*notification id*/(int) System.currentTimeMillis(), notification);
     }
 
     private void createNotificationChannel() {
