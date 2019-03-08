@@ -23,19 +23,21 @@ public class ArticleDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_detail);
 
+
         article= (Article) getIntent().getSerializableExtra("article");
 
-        articleDetailImage=findViewById(R.id.articleDetailImage);
-        articleDetailTitleTv=findViewById(R.id.articleTitleDetailTv);
-        articleDetailDescriptionTv=findViewById(R.id.articleDescriptionDetailTv);
+        if(article!=null) {
+            articleDetailImage = findViewById(R.id.articleDetailImage);
+            articleDetailTitleTv = findViewById(R.id.articleTitleDetailTv);
+            articleDetailDescriptionTv = findViewById(R.id.articleDescriptionDetailTv);
 
-        Glide.with(ArticleDetailActivity.this).load(article.getUrlToImage()).into(articleDetailImage);
+            Glide.with(ArticleDetailActivity.this).load(article.getUrlToImage()).into(articleDetailImage);
 
-        articleDetailTitleTv.setText(article.getTitle());
-        articleDetailDescriptionTv.setText(article.getContent());
+            articleDetailTitleTv.setText(article.getTitle());
+            articleDetailDescriptionTv.setText(article.getContent());
 
 
-
+        }
 
 
 

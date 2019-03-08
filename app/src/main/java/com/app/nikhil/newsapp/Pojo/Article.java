@@ -15,6 +15,16 @@ public class Article implements Serializable {
     boolean isSaved=false;
 
 
+    public Article(String title, String content, String urlToImage) {
+        this.title = title;
+        this.content = content;
+        this.urlToImage = urlToImage;
+    }
+
+    public Article()
+    {
+
+    }
 
     public String getAuthor() {
         return author;

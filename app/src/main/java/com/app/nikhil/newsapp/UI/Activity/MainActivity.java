@@ -14,12 +14,17 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.app.nikhil.newsapp.R;
 import com.app.nikhil.newsapp.UI.Fragments.OflineWarningFragment;
 import com.app.nikhil.newsapp.UI.Fragments.OnlineFragments.OnlineNewsFragment;
 import com.app.nikhil.newsapp.UI.Fragments.SavedNewsFragment;
 import com.app.nikhil.newsapp.UI.Fragments.SearchNewsFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
 
 import java.util.Locale;
 
@@ -42,6 +47,9 @@ public class MainActivity extends AppCompatActivity{
             SharedPreferences mPreferences = this.getSharedPreferences("NewsDB", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = mPreferences.edit();
             editor.putString("userCountry",fetchUserPresentCountry());
+
+            subscribeDeviceForNews();
+
         }
 
 
@@ -84,6 +92,29 @@ public class MainActivity extends AppCompatActivity{
         else {
             loadFragment(new OflineWarningFragment());
         }
+
+
+    }
+
+
+    public void subscribeDeviceForNews()
+    {
+        SharedPreferences mPreferences = this.getSharedPreferences("NewsDB", Context.MODE_PRIVATE);
+        String countryName = mPreferences.getString("userCountry", "in");
+        FirebaseMessaging.getInstance().subscribeToTopic(countryName).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                if (!task.isSuccessful())
+                {
+                    Toast.makeText(MainActivity.this, "Unable to subscribe news in your country", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Log.v("err1","done");
+                }
+
+            }
+        });
 
 
     }
